@@ -1,0 +1,631 @@
+{
+  "_readme": "Collection for the daily incantations app. 'category' records how well-sourced each line is, so you always know what you are saying. THE ORDER OF THIS LIST IS THE ORDER YOU MEET THEM IN: one per day, then it wraps back to the top. It was shuffled once with a fixed seed; reorder by hand whenever you like. 'id' is permanent and never renumbered, because the app's keep/remove votes refer to it.",
+  "_categories": {
+    "incantation": "Tony Robbins' own incantations, as printed in his event manuals (Unleash the Power Within, Date With Destiny, Wealth Mastery, Life Mastery, Leadership Academy).",
+    "primary-question": "Robbins' 'Primary Question', the one he says he asks himself daily.",
+    "winners-creed": "The Winner's Creed, from an older Robbins Life Mastery (Hawaii) manual. Robbins adapted it from affirmations in Napoleon Hill's Think and Grow Rich, so the words are not originally his.",
+    "quote": "Robbins speaking or writing. Not an incantation, but usable in the first person.",
+    "event-manual": "Quotes by OTHER people, collected in Robbins' event manuals. Not Robbins' words.",
+    "circulating-online": "Widely shared in Robbins-adjacent affirmation lists (Project Life Mastery, Martin Formato and similar). NOT traceable to Robbins himself. Included because you asked for everything, but treat the attribution as unknown."
+  },
+  "incantations": [
+    {
+      "id": 5,
+      "category": "incantation",
+      "attribution": "Tony Robbins",
+      "text": "Every day and in every way, I'm getting better and better;\nEvery day and in every way, I'm getting stronger and stronger."
+    },
+    {
+      "id": 57,
+      "category": "event-manual",
+      "attribution": "Martin Luther King Jr",
+      "text": "The ultimate measure of a man is not where he stands in moments of comfort and convenience, but where he stands at times of challenge and controversy."
+    },
+    {
+      "id": 103,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "I live by faith, not by sight."
+    },
+    {
+      "id": 79,
+      "category": "event-manual",
+      "attribution": "Anonymous",
+      "text": "Even and especially when it's difficult, do it anyway and do it now!"
+    },
+    {
+      "id": 14,
+      "category": "winners-creed",
+      "attribution": "Robbins event manual, after Napoleon Hill",
+      "text": "This is my creed, my quest.\nTo never stop striving for the top.\nTo always keep moving forward.\nTo always be the very best I can be."
+    },
+    {
+      "id": 96,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "My daily choices lead to my goals."
+    },
+    {
+      "id": 76,
+      "category": "event-manual",
+      "attribution": "Samuel Smiles",
+      "text": "Sow a thought, and you reap an act;\nsow an act, and you reap a habit;\nsow a habit, and you reap a character;\nsow a character, and you reap a destiny."
+    },
+    {
+      "id": 35,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "What's talked about is a dream.\nWhat's envisioned is exciting.\nWhat's planned becomes possible.\nWhat's scheduled is real."
+    },
+    {
+      "id": 31,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "There are no unresourceful people, only unresourceful states."
+    },
+    {
+      "id": 86,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "I am unstoppable."
+    },
+    {
+      "id": 46,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "The two master skills of life are the Science of Achievement and the Art of Fulfilment."
+    },
+    {
+      "id": 36,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "There are no failures, only outcomes. As long as I learn something, I am succeeding."
+    },
+    {
+      "id": 71,
+      "category": "event-manual",
+      "attribution": "Marianne Williamson",
+      "text": "Our deepest fear is not that we are inadequate. Our deepest fear is that we are powerful beyond measure."
+    },
+    {
+      "id": 44,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "Every time you reach for food, ask yourself: will this cleanse or clog me?"
+    },
+    {
+      "id": 77,
+      "category": "event-manual",
+      "attribution": "Dan Zadra",
+      "text": "There has never been another you. With no effort on your part you were born to be something very special and set apart. What you are going to do in appreciation of that gift is a decision only you can make."
+    },
+    {
+      "id": 69,
+      "category": "event-manual",
+      "attribution": "Maureen Killoran",
+      "text": "Stress is not what happens to us. It's our response to what happens to us. And response is something we can choose."
+    },
+    {
+      "id": 94,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "If I am committed, there is always a way."
+    },
+    {
+      "id": 88,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "I create money easily and effortlessly."
+    },
+    {
+      "id": 95,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "Today is a winning day for me."
+    },
+    {
+      "id": 99,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "My body is my temple."
+    },
+    {
+      "id": 58,
+      "category": "event-manual",
+      "attribution": "Viktor Frankl",
+      "text": "Everything can be taken from man but the last of the human freedoms: to choose one's attitude in any given set of circumstances, to choose one's own way."
+    },
+    {
+      "id": 53,
+      "category": "event-manual",
+      "attribution": "Roy Disney",
+      "text": "It's not hard to make decisions when you know what your values are."
+    },
+    {
+      "id": 83,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "This too shall pass."
+    },
+    {
+      "id": 67,
+      "category": "event-manual",
+      "attribution": "Charles DuBois",
+      "text": "The important thing is this: to be able at any moment to sacrifice what we are for what we could become."
+    },
+    {
+      "id": 75,
+      "category": "event-manual",
+      "attribution": "Benjamin Disraeli",
+      "text": "We are not creatures of circumstance, we are creators of circumstance."
+    },
+    {
+      "id": 41,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "In order to take our lives to the next level, we must realise that the same pattern of thinking that has got us to where we are now will not get us to where we want to go."
+    },
+    {
+      "id": 24,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "The most powerful force in the human psyche is people's need for their words and actions to stay consistent with their identity, how we define ourselves."
+    },
+    {
+      "id": 73,
+      "category": "event-manual",
+      "attribution": "Mary Manin Morrissey",
+      "text": "We have an opportunity to live in joy. Do not postpone happiness until the debts are settled and relationships rearranged. Joy doesn't exist out in the world somewhere, we find it inside."
+    },
+    {
+      "id": 61,
+      "category": "event-manual",
+      "attribution": "Gerry Spence",
+      "text": "I would rather have a mind opened by wonder than one closed by belief."
+    },
+    {
+      "id": 100,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "I have unstoppable energy every day."
+    },
+    {
+      "id": 2,
+      "category": "incantation",
+      "attribution": "Tony Robbins",
+      "text": "God's wealth circulates in my life; God's wealth flows to me in avalanches of abundance; all my needs, desires, and goals are met instantaneously by infinite intelligence; and I give thanks for all of my good now and for all of God's riches, for I am one with God, and God is everything!"
+    },
+    {
+      "id": 26,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "What we link to pleasure and what we link to pain determines our destiny."
+    },
+    {
+      "id": 78,
+      "category": "event-manual",
+      "attribution": "Robbins event manual",
+      "text": "An attitude of gratitude creates blessings. Help yourself by helping others. You have the most powerful weapons on earth: love and prayer."
+    },
+    {
+      "id": 92,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "I am generous with love."
+    },
+    {
+      "id": 87,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "I believe in my unlimited prosperity."
+    },
+    {
+      "id": 20,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "The quality of your life is a direct reflection of the expectations of your peer group. Choose your peers wisely."
+    },
+    {
+      "id": 9,
+      "category": "winners-creed",
+      "attribution": "Robbins event manual, after Napoleon Hill",
+      "text": "I fully realise that no wealth or position will long endure unless it is built upon truth and justice; therefore I will engage in no transaction which does not benefit all whom it affects."
+    },
+    {
+      "id": 37,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "If I can't, then I must. If I must, then I will."
+    },
+    {
+      "id": 50,
+      "category": "event-manual",
+      "attribution": "Edward Butler",
+      "text": "One man has enthusiasm for 30 minutes, another for 30 days, but it is the man who has it for 30 years who makes a success of his life."
+    },
+    {
+      "id": 90,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "I am worthy of love."
+    },
+    {
+      "id": 23,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "The only thing keeping you from getting what you want is the story you keep telling yourself about why you can't have it."
+    },
+    {
+      "id": 15,
+      "category": "winners-creed",
+      "attribution": "Robbins event manual, after Napoleon Hill",
+      "text": "I am the power. I am the magic. I cannot be stopped. I am a winner."
+    },
+    {
+      "id": 39,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "It's not about getting what you want. It's about experiencing what you really need by becoming more."
+    },
+    {
+      "id": 42,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "Our goal is not to ignore the problems of life, but to put ourselves in better mental and emotional states, to not only come up with solutions but really meet the challenge and take action."
+    },
+    {
+      "id": 4,
+      "category": "incantation",
+      "attribution": "Tony Robbins",
+      "text": "All I need is within me now,\nand I have the courage to see it through."
+    },
+    {
+      "id": 65,
+      "category": "event-manual",
+      "attribution": "Oliver Wendell Holmes",
+      "text": "The great thing in life is not so much where we are, but in what direction we are moving."
+    },
+    {
+      "id": 10,
+      "category": "winners-creed",
+      "attribution": "Robbins event manual, after Napoleon Hill",
+      "text": "I am succeeding by attracting to myself the forces I wish to use, and the cooperation of other people."
+    },
+    {
+      "id": 84,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "The best is yet to come."
+    },
+    {
+      "id": 29,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "We always have a choice."
+    },
+    {
+      "id": 1,
+      "category": "incantation",
+      "attribution": "Tony Robbins",
+      "text": "Now I am the voice.\nI will lead not follow.\nI will believe, not doubt.\nI will create, not destroy.\nI am a force for good.\nI am a force for God.\nI am a leader.\nDefy the odds.\nSet a new standard.\nStep up!"
+    },
+    {
+      "id": 82,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "Life doesn't happen to me, it happens for me."
+    },
+    {
+      "id": 93,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "Everything I touch is a success."
+    },
+    {
+      "id": 17,
+      "category": "winners-creed",
+      "attribution": "Robbins event manual, after Napoleon Hill",
+      "text": "I live in constant and never-ending improvement."
+    },
+    {
+      "id": 12,
+      "category": "winners-creed",
+      "attribution": "Robbins event manual, after Napoleon Hill",
+      "text": "I eliminate hatred, envy, jealousy, selfishness, cynicism, anger and fear by developing a true love for all humanity, because I know that a negative attitude towards others will never bring me success."
+    },
+    {
+      "id": 97,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "I eat to fuel my body, not to satisfy an appetite."
+    },
+    {
+      "id": 34,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "Ultimately, no man or woman is happy unless they have found a way to contribute beyond themselves."
+    },
+    {
+      "id": 102,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "I am energetic and full of life!"
+    },
+    {
+      "id": 3,
+      "category": "incantation",
+      "attribution": "Tony Robbins",
+      "text": "I now command my subconscious mind to direct me in helping as many people as possible today to better their lives, by giving me the strength, the emotion, the persuasion, the humour, the brevity, whatever it takes to show these people and get these people to change their life now!"
+    },
+    {
+      "id": 22,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "It is in the realm of uncertainty that your passion is found."
+    },
+    {
+      "id": 32,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "Effective leaders know that resources are never the problem; it's always a matter of resourcefulness."
+    },
+    {
+      "id": 81,
+      "category": "event-manual",
+      "attribution": "Arthur Schopenhauer",
+      "text": "All truth goes through three steps: first it is ridiculed, second it is violently opposed, finally it is accepted as self-evident."
+    },
+    {
+      "id": 60,
+      "category": "event-manual",
+      "attribution": "Anais Nin",
+      "text": "There came a time when the risk to remain tight in the bud was more painful than the risk it took to blossom."
+    },
+    {
+      "id": 56,
+      "category": "event-manual",
+      "attribution": "Barbara De Angelis",
+      "text": "Love is a force more formidable than any other. It is invisible, it cannot be seen or measured, yet it is powerful enough to transform you in a moment and offer you more joy than any material possession could."
+    },
+    {
+      "id": 62,
+      "category": "event-manual",
+      "attribution": "Franklin D. Roosevelt",
+      "text": "There are many ways of going forward, but only one way of standing still."
+    },
+    {
+      "id": 72,
+      "category": "event-manual",
+      "attribution": "Deepak Chopra",
+      "text": "The cosmos will always mirror back to us whatever your inner state is. The greater the love we discover in ourselves, the greater the love will reflect back to us from the environment through others."
+    },
+    {
+      "id": 45,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "Begin to live as though your prayers are already answered."
+    },
+    {
+      "id": 38,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "The words that we attach to our experience become our experience."
+    },
+    {
+      "id": 6,
+      "category": "incantation",
+      "attribution": "Tony Robbins",
+      "text": "I love my life and I am so blessed."
+    },
+    {
+      "id": 66,
+      "category": "event-manual",
+      "attribution": "Antoine de Saint-Exupery",
+      "text": "It is only with the heart that one sees rightly; what is essential is invisible to the eye."
+    },
+    {
+      "id": 74,
+      "category": "event-manual",
+      "attribution": "Henry David Thoreau",
+      "text": "There is no remedy for love but to love more."
+    },
+    {
+      "id": 91,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "I give and receive love effortlessly and easily."
+    },
+    {
+      "id": 59,
+      "category": "event-manual",
+      "attribution": "Viktor Frankl",
+      "text": "When we are no longer able to change a situation, we are challenged to change ourselves."
+    },
+    {
+      "id": 28,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "Your biggest problem is that you think the current problem you're facing is your problem."
+    },
+    {
+      "id": 68,
+      "category": "event-manual",
+      "attribution": "Gandhi",
+      "text": "My life is my message."
+    },
+    {
+      "id": 98,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "Nothing tastes as good as being healthy and fit feels."
+    },
+    {
+      "id": 40,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "What you consistently speak with emotional intensity, you will experience, you will create, and you will become. The words that you speak with emotional conviction become the life you live: this is your heaven or this is your hell."
+    },
+    {
+      "id": 11,
+      "category": "winners-creed",
+      "attribution": "Robbins event manual, after Napoleon Hill",
+      "text": "I induce others to serve me because of my willingness to serve others."
+    },
+    {
+      "id": 33,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "People are bigger than anything that can happen to them."
+    },
+    {
+      "id": 16,
+      "category": "winners-creed",
+      "attribution": "Robbins event manual, after Napoleon Hill",
+      "text": "I promise to always be true to myself, because I am the creator and master of my universe, and I am responsible for making a positive difference in the world and to the quality of life in it."
+    },
+    {
+      "id": 55,
+      "category": "event-manual",
+      "attribution": "Goethe",
+      "text": "Take care of your body with steadfast fidelity. The soul must see through these eyes alone, and if they are dim, the whole world is clouded."
+    },
+    {
+      "id": 63,
+      "category": "event-manual",
+      "attribution": "George Bernard Shaw",
+      "text": "Life isn't about finding yourself, life is about creating yourself."
+    },
+    {
+      "id": 52,
+      "category": "event-manual",
+      "attribution": "Robbins event manual",
+      "text": "E.G.O. = Edging God Out."
+    },
+    {
+      "id": 19,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "It is in your moments of decision that your destiny is shaped."
+    },
+    {
+      "id": 85,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "The secret to living is giving."
+    },
+    {
+      "id": 64,
+      "category": "event-manual",
+      "attribution": "Ralph Waldo Emerson",
+      "text": "What lies before us, what lies behind us, is nothing compared to what lies within us."
+    },
+    {
+      "id": 8,
+      "category": "winners-creed",
+      "attribution": "Robbins event manual, after Napoleon Hill",
+      "text": "I know that I have the ability to achieve my definite purpose in life: therefore I demand of myself persistent, continuous action towards its attainment, and I here and now promise to render such action."
+    },
+    {
+      "id": 21,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "The quality of your life is in direct proportion to the amount of uncertainty that you can comfortably live with."
+    },
+    {
+      "id": 18,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "The past does not equal the future."
+    },
+    {
+      "id": 89,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "I honour my worth."
+    },
+    {
+      "id": 70,
+      "category": "event-manual",
+      "attribution": "Bruce Barton",
+      "text": "Nothing splendid has ever been achieved except by those who believed that something inside of them was superior to circumstance."
+    },
+    {
+      "id": 27,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "What is an extraordinary life? A life of meaning, a magnificent life, a life of joy, happiness, love, passion, success and fulfilment. Life experienced on your terms."
+    },
+    {
+      "id": 51,
+      "category": "event-manual",
+      "attribution": "Robbins event manual",
+      "text": "F.E.A.R. = False Evidence Appearing Real."
+    },
+    {
+      "id": 47,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "The Art of Fulfilment is the ability to experience not only the thrill of the chase, but also the magic of the moment, the unbridled joy of feeling truly alive."
+    },
+    {
+      "id": 7,
+      "category": "primary-question",
+      "attribution": "Tony Robbins",
+      "text": "How can I appreciate, even more, all of the love and guidance that is inside of me right now?"
+    },
+    {
+      "id": 43,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "Forgiveness needs to be our greatest skill. The way to get good at forgiveness is to be thankful for all the little things you see in the other person."
+    },
+    {
+      "id": 54,
+      "category": "event-manual",
+      "attribution": "Epictetus",
+      "text": "No man is free who is not master of himself."
+    },
+    {
+      "id": 49,
+      "category": "event-manual",
+      "attribution": "Ralph Waldo Emerson",
+      "text": "Nothing great was ever achieved without enthusiasm."
+    },
+    {
+      "id": 48,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "Lasting fulfilment is attained only through gaining insight into the core of our human nature, unleashing the power to understand, appreciate and enjoy our lives at the deepest level."
+    },
+    {
+      "id": 30,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "Change your habitual questions and change your destiny!"
+    },
+    {
+      "id": 25,
+      "category": "quote",
+      "attribution": "Tony Robbins",
+      "text": "Ultimately the way to win the game of life is found in only one thing: our ability to choose meaning in any life circumstance. Become the master of meaning and you master your life."
+    },
+    {
+      "id": 101,
+      "category": "circulating-online",
+      "attribution": "unverified",
+      "text": "I am happy! I am in control of how I feel! I choose to be happy right now."
+    },
+    {
+      "id": 80,
+      "category": "event-manual",
+      "attribution": "Andrew Jackson",
+      "text": "One man with courage makes a majority."
+    },
+    {
+      "id": 13,
+      "category": "winners-creed",
+      "attribution": "Robbins event manual, after Napoleon Hill",
+      "text": "I cause others to believe in me because I believe in them and believe in myself."
+    }
+  ]
+}

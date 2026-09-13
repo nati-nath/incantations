@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Daily Incantation</title>
+
+<!-- width=device-width stops the phone pretending it is a desktop.
+     viewport-fit=cover lets us paint under the notch; safe-area-inset below keeps text clear of it. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- These make "Add to Home Screen" open without Safari's address bar and tabs. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Incantation">
+
+<meta name="theme-color" content="#0d0f14">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+
+<style>
+  :root {
+    --bg: #0d0f14;
+    --ink: #f4f1ea;
+    --dim: #7c8698;
+    --line: #313a4d;
+    --gold: #d9a94c;
+    --rose: #c8697a;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; margin: 0; }
+
+  body {
+    background: radial-gradient(120% 90% at 50% 0%, #1a1f2b 0%, var(--bg) 60%);
+    color: var(--ink);
+    font-family: ui-serif, Georgia, "Times New Roman", serif;
+    display: flex;
+    flex-direction: column;
+    padding: calc(env(safe-area-inset-top) + 1.25rem) 1.25rem calc(env(safe-area-inset-bottom) + 1rem);
+    text-align: center;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .sans { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; }
+
+  header {
+    flex: 0 0 auto;
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    color: var(--dim);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  main {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  /* clamp() scales type with the screen. pre-line keeps the line breaks from the JSON. */
+  #text {
+    font-size: clamp(1.35rem, 5.2vw, 2.3rem);
+    line-height: 1.45;
+    white-space: pre-line;
+    margin: 0;
+    max-width: 34ch;
+    transition: opacity 0.3s ease;
+  }
+  #text.long { font-size: clamp(1.05rem, 4vw, 1.6rem); }
+  #text.fading { opacity: 0; }
+
+  #attribution {
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-size: 0.76rem;
+    color: var(--dim);
+    letter-spacing: 0.03em;
+    max-width: 32ch;
+    line-height: 1.5;
+    margin: 0;
+  }
+  #attribution.unverified { color: var(--gold); }
+
+  footer { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.9rem; }
+
+  .verdict { display: flex; gap: 0.75rem; }
+
+  button {
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.75rem 1.25rem;
+    cursor: pointer;
+  }
+  button:active { background: #1a2030; }
+
+  #love.on { border-color: var(--gold); color: var(--gold); }
+  #drop { border-color: #3d2a30; color: var(--rose); }
+
+  .quiet {
+    border: none;
+    color: var(--dim);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .row { display: flex; gap: 0.5rem; align-items: center; }
+  #back { visibility: hidden; }
+  #back.show { visibility: visible; }
+
+  /* ---- Manage panel ---- */
+  #panel {
+    position: fixed;
+    inset: 0;
+    background: #0b0d12;
+    display: none;
+    flex-direction: column;
+    padding: calc(env(safe-area-inset-top) + 1rem) 1.1rem calc(env(safe-area-inset-bottom) + 1rem);
+    text-align: left;
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    z-index: 10;
+  }
+  #panel.open { display: flex; }
+  #panel h2 { font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); margin: 1.1rem 0 0.5rem; font-weight: 600; }
+  #panel .scroll { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  #panel .item { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.55rem 0; border-bottom: 1px solid #171c26; font-size: 0.82rem; line-height: 1.4; color: #cfd6e2; }
+  #panel .item span { flex: 1 1 auto; }
+  #panel .item .id { flex: 0 0 auto; color: var(--dim); font-variant-numeric: tabular-nums; }
+  #panel .item button { flex: 0 0 auto; font-size: 0.6rem; padding: 0.3rem 0.55rem; letter-spacing: 0.08em; }
+  #panel .empty { color: var(--dim); font-size: 0.82rem; padding: 0.5rem 0; }
+  #export { width: 100%; height: 5.5rem; background: #12161f; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 0.6rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; -webkit-user-select: text; user-select: text; }
+  .panel-actions { display: flex; gap: 0.5rem; padding-top: 0.75rem; }
+  #copied { color: var(--gold); font-size: 0.72rem; }
+</style>
+</head>
+<body>
+
+<header id="date">&nbsp;</header>
+
+<main>
+  <p id="text">Loading…</p>
+  <p id="attribution"></p>
+</main>
+
+<footer>
+  <div class="verdict">
+    <button id="love">♡ Love it</button>
+    <button id="drop">✕ Not for me</button>
+  </div>
+  <div class="row">
+    <button id="another" class="quiet">Give me another</button>
+    <button id="back" class="quiet">Back to today's</button>
+  </div>
+  <button id="open-panel" class="quiet">&nbsp;</button>
+</footer>
+
+<div id="panel">
+  <button id="close-panel" class="quiet" style="align-self:flex-end">Close ✕</button>
+  <div class="scroll">
+    <h2>Paste this to Claude to prune the file</h2>
+    <textarea id="export" readonly></textarea>
+    <div class="panel-actions">
+      <button id="copy">Copy</button>
+      <span id="copied"></span>
+    </div>
+    <h2 id="removed-head">Removed</h2>
+    <div id="removed-list"></div>
+    <h2 id="loved-head">Loved</h2>
+    <div id="loved-list"></div>
+    <h2>Reset</h2>
+    <div class="panel-actions">
+      <button id="reset">Clear all my votes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===========================================================================
+// STATE. Everything lives in one localStorage entry on this device.
+//   day     the last date we advanced the rotation on
+//   pos     where we are in the file order (this is the "today" position)
+//   loved   ids you marked as keepers
+//   removed ids you rejected; these are skipped everywhere
+// The rotation remembers its position rather than deriving it from the date,
+// so editing incantations.json does not move today's line.
+// ===========================================================================
+const KEY = 'incantation.state.v1';
+
+const blank = { day: null, pos: 0, loved: [], removed: [] };
+
+function load() {
+  try {
+    return Object.assign({}, blank, JSON.parse(localStorage.getItem(KEY)) || {});
+  } catch (e) {
+    return Object.assign({}, blank);
+  }
+}
+
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* private mode */ }
+}
+
+let state = load();
+let all = [];
+let view = 0;   // which index is on screen right now
+
+// 'en-CA' formats as YYYY-MM-DD. Local time, so it rolls over at your midnight.
+const todayKey = () => new Date().toLocaleDateString('en-CA');
+
+const isRemoved = i => state.removed.includes(all[i].id);
+const liveCount = () => all.filter((_, i) => !isRemoved(i)).length;
+
+// Walk forward from `from` to the next line you have not rejected.
+function nextLive(from) {
+  for (let step = 1; step <= all.length; step++) {
+    const i = (from + step) % all.length;
+    if (!isRemoved(i)) return i;
+  }
+  return from;
+}
+
+const CATEGORY_LABEL = {
+  'incantation':        'Tony Robbins, incantation',
+  'primary-question':   'Tony Robbins, his Primary Question',
+  'winners-creed':      "The Winner's Creed, Robbins manual, after Napoleon Hill",
+  'quote':              'Tony Robbins',
+  'event-manual':       null,   // shows the real author instead
+  'circulating-online': 'Widely shared, but not traceable to Robbins'
+};
+
+function render(i, animate = true) {
+  const item = all[i];
+  const textEl = document.getElementById('text');
+  const attrEl = document.getElementById('attribution');
+
+  const paint = () => {
+    view = i;
+    textEl.textContent = item.text;
+    textEl.classList.toggle('long', item.text.length > 180 || item.text.split('\n').length > 6);
+    textEl.classList.remove('fading');
+
+    attrEl.textContent = CATEGORY_LABEL[item.category] || item.attribution;
+    attrEl.classList.toggle('unverified', item.category === 'circulating-online');
+
+    document.getElementById('love').classList.toggle('on', state.loved.includes(item.id));
+    document.getElementById('back').classList.toggle('show', i !== state.pos);
+    refreshCounts();
+  };
+
+  if (animate) {
+    textEl.classList.add('fading');
+    setTimeout(paint, 300);
+  } else {
+    paint();
+  }
+}
+
+function refreshCounts() {
+  const bits = [];
+  if (state.loved.length)   bits.push(state.loved.length + ' loved');
+  if (state.removed.length) bits.push(state.removed.length + ' removed');
+  bits.push(liveCount() + ' in rotation');
+  document.getElementById('open-panel').textContent = bits.join('  ·  ');
+}
+
+// ---------------------------------------------------------------------------
+// Buttons
+// ---------------------------------------------------------------------------
+document.getElementById('love').addEventListener('click', () => {
+  const id = all[view].id;
+  const at = state.loved.indexOf(id);
+  if (at === -1) state.loved.push(id); else state.loved.splice(at, 1);
+  save();
+  document.getElementById('love').classList.toggle('on', state.loved.includes(id));
+  refreshCounts();
+});
+
+document.getElementById('drop').addEventListener('click', () => {
+  if (liveCount() <= 1) return;                      // never empty the rotation
+  const id = all[view].id;
+  const lovedAt = state.loved.indexOf(id);          // rejecting it also un-loves it
+  if (lovedAt !== -1) state.loved.splice(lovedAt, 1);
+  if (!state.removed.includes(id)) state.removed.push(id);
+  if (view === state.pos) state.pos = nextLive(state.pos);
+  if (isRemoved(state.pos)) state.pos = nextLive(state.pos);
+  save();
+  render(state.pos);
+});
+
+document.getElementById('another').addEventListener('click', () => {
+  const live = all.map((_, i) => i).filter(i => !isRemoved(i) && i !== view);
+  if (!live.length) return;
+  render(live[Math.floor(Math.random() * live.length)]);
+});
+
+document.getElementById('back').addEventListener('click', () => render(state.pos));
+
+// ---------------------------------------------------------------------------
+// Manage panel
+// ---------------------------------------------------------------------------
+function short(t) { const s = t.replace(/\n/g, ' / '); return s.length > 90 ? s.slice(0, 90) + '…' : s; }
+
+function listInto(el, ids, undoLabel, onUndo) {
+  el.innerHTML = '';
+  if (!ids.length) {
+    const p = document.createElement('div');
+    p.className = 'empty';
+    p.textContent = 'Nothing yet.';
+    el.appendChild(p);
+    return;
+  }
+  ids.forEach(id => {
+    const item = all.find(x => x.id === id);
+    if (!item) return;
+    const row = document.createElement('div');
+    row.className = 'item';
+    const idEl = document.createElement('b');
+    idEl.className = 'id';
+    idEl.textContent = id;
+    const txt = document.createElement('span');
+    txt.textContent = short(item.text);
+    const btn = document.createElement('button');
+    btn.textContent = undoLabel;
+    btn.addEventListener('click', () => { onUndo(id); openPanel(); refreshCounts(); });
+    row.append(idEl, txt, btn);
+    el.appendChild(row);
+  });
+}
+
+function exportText() {
+  const lines = ['Prune my incantations.json:'];
+  lines.push('remove ids: ' + (state.removed.length ? state.removed.join(', ') : '(none)'));
+  lines.push('loved ids: '  + (state.loved.length   ? state.loved.join(', ')   : '(none)'));
+  return lines.join('\n');
+}
+
+function openPanel() {
+  document.getElementById('export').value = exportText();
+  document.getElementById('removed-head').textContent = 'Removed (' + state.removed.length + ')';
+  document.getElementById('loved-head').textContent   = 'Loved (' + state.loved.length + ')';
+  listInto(document.getElementById('removed-list'), state.removed, 'Put back', id => {
+    state.removed.splice(state.removed.indexOf(id), 1); save();
+  });
+  listInto(document.getElementById('loved-list'), state.loved, 'Unlove', id => {
+    state.loved.splice(state.loved.indexOf(id), 1); save();
+  });
+  document.getElementById('panel').classList.add('open');
+}
+
+document.getElementById('open-panel').addEventListener('click', openPanel);
+document.getElementById('close-panel').addEventListener('click', () => {
+  document.getElementById('panel').classList.remove('open');
+  render(view, false);
+});
+
+document.getElementById('copy').addEventListener('click', async () => {
+  const ta = document.getElementById('export');
+  try {
+    await navigator.clipboard.writeText(ta.value);
+    document.getElementById('copied').textContent = 'Copied';
+  } catch (e) {
+    // Older iOS: select the text so you can tap Copy yourself.
+    ta.focus(); ta.setSelectionRange(0, ta.value.length);
+    document.getElementById('copied').textContent = 'Selected, tap Copy';
+  }
+  setTimeout(() => { document.getElementById('copied').textContent = ''; }, 2500);
+});
+
+document.getElementById('reset').addEventListener('click', () => {
+  if (!confirm('Clear every loved and removed vote on this device?')) return;
+  state.loved = []; state.removed = []; save();
+  openPanel(); render(state.pos, false);
+});
+
+// ---------------------------------------------------------------------------
+// Boot: load the collection, advance the rotation if it is a new day.
+// ---------------------------------------------------------------------------
+function stampDate() {
+  document.getElementById('date').textContent =
+    new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+}
+
+function advanceIfNewDay() {
+  const today = todayKey();
+  if (state.day === null) {
+    state.day = today;                    // very first run: start at the top of the file
+  } else if (state.day !== today) {
+    state.pos = nextLive(state.pos);      // one step per new day, so nothing gets skipped
+    state.day = today;
+  }
+  if (isRemoved(state.pos)) state.pos = nextLive(state.pos);
+  save();
+}
+
+fetch('incantations.json')
+  .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  .then(data => {
+    all = data.incantations;
+    if (!all.length) throw new Error('the collection is empty');
+    if (state.pos >= all.length) state.pos = 0;   // list got shorter since last time
+    advanceIfNewDay();
+    stampDate();
+    render(state.pos, false);
+  })
+  .catch(err => {
+    document.getElementById('text').textContent = 'Could not load the collection.';
+    document.getElementById('attribution').textContent = err.message +
+      '. If that mentions CORS or "Failed to fetch", the page was opened as a file instead of being served.';
+  });
+
+// If the app was left open overnight, move on when you come back to it.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible' || !all.length) return;
+  if (state.day === todayKey()) return;
+  advanceIfNewDay();
+  stampDate();
+  render(state.pos);
+});
+</script>
+</body>
+</html>
