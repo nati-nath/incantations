@@ -63,3 +63,26 @@ python3 -m http.server 8000
 ```
 
 Then open http://localhost:8000
+
+## Changing the collection
+
+```bash
+# 1. edit incantations.json: add a line, or delete ones you rejected on the phone
+
+# 2. check the JSON still parses
+python3 -m json.tool incantations.json > /dev/null && echo valid
+
+# 3. publish
+git add -A && git commit -m "prune the collection" && git push
+```
+
+The live site updates about a minute later. Close and reopen the phone app to get past the cached copy.
+
+Rules:
+
+- **Never renumber `id`.** The device's keep/remove votes refer to ids, so renumbering silently
+  reassigns your votes to the wrong lines.
+- File order is rotation order. Reorder freely, it will not move the line already showing today.
+- Adding at the end is safe; it gets reached at the end of the current cycle.
+- To act on the votes stored on a device, open the counter at the bottom of the app, tap Copy, and
+  use the exported `remove ids: ...` list to delete those entries here.
