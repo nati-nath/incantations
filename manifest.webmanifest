@@ -1,6 +1,6 @@
 {
-  "name": "Daily Incantation",
-  "short_name": "Incantation",
+  "name": "Ritual",
+  "short_name": "Ritual",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0d0f14",

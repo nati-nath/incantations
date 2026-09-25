@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Daily Incantation</title>
+<title>Ritual</title>
 
 <!-- width=device-width stops the phone pretending it is a desktop.
      viewport-fit=cover lets us paint under the notch; safe-area-inset below keeps text clear of it. -->
@@ -11,7 +11,7 @@
 <!-- These make "Add to Home Screen" open without Safari's address bar and tabs. -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Incantation">
+<meta name="apple-mobile-web-app-title" content="Ritual">
 
 <meta name="theme-color" content="#0d0f14">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -26,6 +26,7 @@
     --line: #313a4d;
     --gold: #d9a94c;
     --rose: #c8697a;
+    --sky: #7ba7c2;
   }
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -105,6 +106,7 @@
     cursor: pointer;
   }
   button:active { background: #1a2030; }
+  button:disabled { opacity: 0.35; }
 
   #love.on { border-color: var(--gold); color: var(--gold); }
   #drop { border-color: #3d2a30; color: var(--rose); }
@@ -120,6 +122,263 @@
   .row { display: flex; gap: 0.5rem; align-items: center; }
   #back { visibility: hidden; }
   #back.show { visibility: visible; }
+
+  /* ---- Tabs ---- */
+  #tabbar {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+  }
+  #tabbar button {
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+  }
+  #tabbar button.active { color: var(--ink); border-color: var(--gold); }
+
+  .tab-panel { display: none; flex: 1 1 auto; flex-direction: column; min-height: 0; }
+  .tab-panel.active { display: flex; }
+
+  /* ---- Gym ---- */
+  .gym-header {
+    flex: 0 0 auto;
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    color: var(--dim);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .gym-main {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    min-height: 0;
+  }
+  .gym-photo-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 22rem;
+    flex: 1 1 auto;
+    min-height: 0;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #12161f;
+  }
+  .gym-photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .gym-timer {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--ink);
+    background: rgba(13, 15, 20, 0.55);
+    backdrop-filter: blur(6px);
+    border-radius: 999px;
+    padding: 0.35rem 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .gym-timer.urgent { color: var(--rose); }
+  .gym-name-badge {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 2.2rem 1rem 0.9rem;
+    background: linear-gradient(180deg, transparent, rgba(6,7,10,0.88) 70%);
+    color: var(--ink);
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  .gym-segments {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 3px;
+    width: 100%;
+    max-width: 22rem;
+  }
+  .gym-segments .seg {
+    flex: 1 1 auto;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .gym-segments .seg .fill {
+    height: 100%;
+    width: 0%;
+    background: var(--gold);
+  }
+  .gym-segments .seg.done .fill { width: 100%; }
+  .gym-next {
+    flex: 0 0 auto;
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-size: 0.78rem;
+    color: var(--dim);
+  }
+  .gym-footer { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+  #gym-startpause { min-width: 8rem; }
+  .gym-done {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(11, 13, 18, 0.97);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    text-align: center;
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    z-index: 5;
+  }
+  .gym-done.open { display: flex; }
+  .gym-done p:first-child { font-size: 1.4rem; color: var(--gold); font-family: ui-serif, Georgia, serif; }
+  .gym-done p:last-child { color: var(--dim); font-size: 0.85rem; }
+
+  /* ---- Breathing ---- */
+  .breath-header {
+    flex: 0 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+  .breath-header button {
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dim);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.45rem 0.8rem;
+  }
+  .breath-header button.active { color: var(--ink); border-color: var(--sky); }
+  .breath-desc {
+    flex: 0 0 auto;
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-size: 0.74rem;
+    color: var(--dim);
+    text-align: center;
+    max-width: 30ch;
+    margin: 0.6rem auto 0;
+    line-height: 1.4;
+  }
+  .breath-main {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.1rem;
+    min-height: 0;
+  }
+  .breath-circle-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 16rem;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  .breath-circle {
+    position: absolute;
+    width: 62%;
+    height: 62%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, rgba(123,167,194,0.55), rgba(123,167,194,0.12) 70%);
+    border: 1px solid rgba(123,167,194,0.55);
+    transform: scale(0.62);
+    transition: transform 4s linear;
+  }
+  .breath-readout { position: relative; text-align: center; z-index: 1; }
+  .breath-phase {
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sky);
+  }
+  .breath-count {
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-size: 3rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+  .breath-phasebar {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 4px;
+    width: 100%;
+    max-width: 16rem;
+  }
+  .breath-phasebar .seg {
+    flex: 1 1 auto;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .breath-phasebar .seg.current { background: rgba(123,167,194,0.35); }
+  .breath-phasebar .seg .fill { height: 100%; width: 0%; background: var(--sky); }
+  .breath-controls {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .breath-stepper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  }
+  .breath-stepper .label { font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
+  .breath-stepper .row { display: flex; align-items: center; gap: 0.35rem; }
+  .breath-stepper button {
+    width: 1.9rem; height: 1.9rem; border-radius: 999px;
+    border: 1px solid var(--line); background: transparent; color: var(--ink);
+    font-size: 0.95rem; line-height: 1; padding: 0;
+  }
+  .breath-stepper .val {
+    min-width: 1.6rem; text-align: center; font-size: 0.95rem;
+    font-variant-numeric: tabular-nums; color: var(--ink);
+  }
+  .breath-stepper .val.skip { color: var(--dim); }
+  .breath-stats {
+    flex: 0 0 auto;
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-size: 0.72rem;
+    color: var(--dim);
+    font-variant-numeric: tabular-nums;
+  }
+  .breath-footer { flex: 0 0 auto; display: flex; justify-content: center; gap: 0.6rem; padding-top: 0.4rem; }
+  #breath-startpause { min-width: 8rem; }
 
   /* ---- Manage panel ---- */
   #panel {
@@ -148,6 +407,14 @@
 </head>
 <body>
 
+<nav id="tabbar">
+  <button id="tab-btn-incantation" class="active">Incantation</button>
+  <button id="tab-btn-gym">Gym</button>
+  <button id="tab-btn-breathing">Breathing</button>
+</nav>
+
+<section id="tab-incantation" class="tab-panel active">
+
 <header id="date">&nbsp;</header>
 
 <main>
@@ -166,6 +433,67 @@
   </div>
   <button id="open-panel" class="quiet">&nbsp;</button>
 </footer>
+
+</section>
+
+<section id="tab-gym" class="tab-panel" style="position: relative;">
+
+  <header class="gym-header" id="gym-progress-label">Move 1 of 15</header>
+
+  <main class="gym-main">
+    <div class="gym-photo-wrap">
+      <img id="gym-photo" src="" alt="">
+      <div class="gym-timer" id="gym-timer">60</div>
+      <div class="gym-name-badge" id="gym-name"></div>
+    </div>
+    <div class="gym-segments" id="gym-segments"></div>
+    <p class="gym-next" id="gym-next">&nbsp;</p>
+  </main>
+
+  <footer class="gym-footer">
+    <div class="row">
+      <button id="gym-back" class="quiet">‹ Back</button>
+      <button id="gym-startpause">Start</button>
+      <button id="gym-skip" class="quiet">Skip ›</button>
+    </div>
+    <button id="gym-restart" class="quiet">Restart workout</button>
+  </footer>
+
+  <div class="gym-done" id="gym-done">
+    <p>Workout complete</p>
+    <p id="gym-done-summary">15 movements &middot; 15 minutes</p>
+    <button id="gym-done-restart">Do it again</button>
+  </div>
+
+</section>
+
+<section id="tab-breathing" class="tab-panel">
+
+  <header class="breath-header" id="breath-presets"></header>
+  <p class="breath-desc" id="breath-desc">&nbsp;</p>
+
+  <main class="breath-main">
+    <div class="breath-circle-wrap">
+      <div class="breath-circle" id="breath-circle"></div>
+      <div class="breath-readout">
+        <div class="breath-phase" id="breath-phase">Ready</div>
+        <div class="breath-count" id="breath-count">&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="breath-phasebar" id="breath-phasebar"></div>
+
+    <div class="breath-controls" id="breath-controls"></div>
+
+    <p class="breath-stats" id="breath-stats">0 cycles &middot; 0:00</p>
+  </main>
+
+  <footer class="breath-footer">
+    <button id="breath-startpause">Start</button>
+    <button id="breath-reset" class="quiet">Reset</button>
+  </footer>
+
+</section>
 
 <div id="panel">
   <button id="close-panel" class="quiet" style="align-self:flex-end">Close ✕</button>
@@ -405,7 +733,7 @@ function advanceIfNewDay() {
   save();
 }
 
-fetch('incantations.json')
+fetch('incantations/incantations.json')
   .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
   .then(data => {
     all = data.incantations;
@@ -429,6 +757,459 @@ document.addEventListener('visibilitychange', () => {
   stampDate();
   render(state.pos);
 });
+
+// ===========================================================================
+// GYM. 15 movements, a minute each, back to back. The countdown is driven off
+// a start timestamp rather than a tick counter, so it stays accurate even if
+// the tab was backgrounded for a moment.
+// ===========================================================================
+const Gym = (() => {
+  let movements = [];
+  let loaded = false;
+  let index = 0;
+  let running = false;
+  let startTs = null;       // Date.now() when the current movement's countdown last (re)started
+  let pausedElapsed = 0;    // seconds already spent on the current movement when paused
+  let tickId = null;
+  let wakeLock = null;
+
+  const els = {};
+  function cacheEls() {
+    ['gym-progress-label', 'gym-photo', 'gym-timer', 'gym-name', 'gym-segments', 'gym-next',
+     'gym-back', 'gym-startpause', 'gym-skip', 'gym-restart', 'gym-done', 'gym-done-summary', 'gym-done-restart']
+      .forEach(id => { els[id] = document.getElementById(id); });
+  }
+
+  function buildSegments() {
+    els['gym-segments'].innerHTML = '';
+    movements.forEach(() => {
+      const seg = document.createElement('div');
+      seg.className = 'seg';
+      seg.innerHTML = '<div class="fill"></div>';
+      els['gym-segments'].appendChild(seg);
+    });
+  }
+
+  function beep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.frequency.value = 880;
+      gain.gain.value = 0.0001;
+      osc.connect(gain); gain.connect(ctx.destination);
+      const t = ctx.currentTime;
+      gain.gain.exponentialRampToValueAtTime(0.2, t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
+      osc.start(t); osc.stop(t + 0.3);
+      osc.onended = () => ctx.close();
+    } catch (e) { /* no audio available, silently skip */ }
+    if (navigator.vibrate) navigator.vibrate(150);
+  }
+
+  async function acquireWakeLock() {
+    try { wakeLock = await navigator.wakeLock.request('screen'); } catch (e) { /* not supported, fine */ }
+  }
+  function releaseWakeLock() {
+    if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; }
+  }
+
+  function renderMovement() {
+    const m = movements[index];
+    els['gym-progress-label'].textContent = 'Move ' + (index + 1) + ' of ' + movements.length;
+    els['gym-photo'].src = m.image;
+    els['gym-photo'].alt = m.name;
+    els['gym-name'].textContent = m.name;
+    const next = movements[index + 1];
+    els['gym-next'].textContent = next ? 'Next: ' + next.name : 'Last one';
+
+    document.querySelectorAll('#gym-segments .seg').forEach((seg, i) => {
+      seg.classList.toggle('done', i < index);
+      seg.querySelector('.fill').style.width = i < index ? '100%' : '0%';
+    });
+
+    els['gym-timer'].textContent = m.seconds;
+    els['gym-timer'].classList.remove('urgent');
+    els['gym-startpause'].textContent = 'Start';
+    els['gym-back'].disabled = index === 0;
+  }
+
+  function renderTick(remaining) {
+    const m = movements[index];
+    els['gym-timer'].textContent = Math.max(0, Math.ceil(remaining));
+    els['gym-timer'].classList.toggle('urgent', remaining <= 5);
+    const frac = Math.min(1, Math.max(0, 1 - remaining / m.seconds));
+    const fill = document.querySelectorAll('#gym-segments .seg')[index];
+    if (fill) fill.querySelector('.fill').style.width = (frac * 100) + '%';
+  }
+
+  function tick() {
+    if (!running) return;
+    const m = movements[index];
+    const elapsed = pausedElapsed + (Date.now() - startTs) / 1000;
+    const remaining = m.seconds - elapsed;
+    if (remaining <= 0) {
+      advance();
+    } else {
+      renderTick(remaining);
+    }
+  }
+
+  function start() {
+    if (running) return;
+    running = true;
+    startTs = Date.now();
+    els['gym-startpause'].textContent = 'Pause';
+    acquireWakeLock();
+    if (!tickId) tickId = setInterval(tick, 200);
+  }
+
+  function pause() {
+    if (!running) return;
+    const m = movements[index];
+    pausedElapsed = Math.min(m.seconds, pausedElapsed + (Date.now() - startTs) / 1000);
+    running = false;
+    els['gym-startpause'].textContent = 'Resume';
+    releaseWakeLock();
+  }
+
+  function goTo(i, autorun) {
+    index = Math.max(0, Math.min(movements.length - 1, i));
+    pausedElapsed = 0;
+    running = false;
+    els['gym-done'].classList.remove('open');
+    renderMovement();
+    if (autorun) start();
+  }
+
+  function advance() {
+    beep();
+    if (index >= movements.length - 1) { finish(); return; }
+    goTo(index + 1, true);
+  }
+
+  function finish() {
+    running = false;
+    releaseWakeLock();
+    const totalMin = movements.reduce((s, m) => s + m.seconds, 0) / 60;
+    els['gym-done-summary'].textContent = movements.length + ' movements · ' + totalMin + ' minutes';
+    els['gym-done'].classList.add('open');
+    document.querySelectorAll('#gym-segments .seg').forEach(seg => {
+      seg.classList.add('done');
+      seg.querySelector('.fill').style.width = '100%';
+    });
+  }
+
+  function wireControls() {
+    els['gym-startpause'].addEventListener('click', () => { running ? pause() : start(); });
+    els['gym-skip'].addEventListener('click', () => {
+      if (index >= movements.length - 1) { finish(); return; }
+      goTo(index + 1, running);
+    });
+    els['gym-back'].addEventListener('click', () => goTo(index - 1, running));
+    els['gym-restart'].addEventListener('click', () => goTo(0, false));
+    els['gym-done-restart'].addEventListener('click', () => goTo(0, true));
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && running) acquireWakeLock();
+    });
+  }
+
+  function boot() {
+    if (loaded) return;
+    loaded = true;
+    cacheEls();
+    wireControls();
+    fetch('gym/movements.json')
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(data => {
+        movements = data.movements;
+        buildSegments();
+        goTo(0, false);
+      })
+      .catch(err => {
+        els['gym-name'].textContent = 'Could not load the movements.';
+        els['gym-next'].textContent = err.message;
+      });
+  }
+
+  return { boot: boot };
+})();
+
+// ===========================================================================
+// BREATHING. A repeating inhale / hold / exhale / hold cycle. Any phase set
+// to 0 seconds is skipped entirely — that's how 4-7-8 (no second hold) and
+// coherent breathing (no holds at all) both fall out of the same 4-number
+// model instead of needing special cases.
+// ===========================================================================
+const Breath = (() => {
+  let PRESETS = []; // loaded from breathing/presets.json at boot
+  const LABELS = ['Inhale', 'Hold', 'Exhale', 'Hold'];
+  const PRE_SCALE = [0.62, 1.15, 1.15, 0.62]; // circle size the moment each phase begins
+  const SECONDS_KEY = 'breath.seconds.v1';
+
+  let seconds = [4, 4, 4, 4]; // box breathing, until presets.json loads (or a saved value is found)
+  let phases = [];          // built from `seconds`, skipping any 0s
+  let phaseIdx = 0;
+  let cycles = 0;
+  let running = false;
+  let startTs = null;
+  let pausedElapsed = 0;
+  let tickId = null;
+  let loaded = false;
+
+  const els = {};
+  function cacheEls() {
+    ['breath-presets', 'breath-desc', 'breath-circle', 'breath-phase', 'breath-count',
+     'breath-phasebar', 'breath-controls', 'breath-stats', 'breath-startpause', 'breath-reset']
+      .forEach(id => { els[id] = document.getElementById(id); });
+  }
+
+  function save() {
+    try { localStorage.setItem(SECONDS_KEY, JSON.stringify(seconds)); } catch (e) { /* private mode */ }
+  }
+  function load() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(SECONDS_KEY));
+      if (Array.isArray(raw) && raw.length === 4) {
+        seconds = raw.map(n => Math.max(0, Math.min(60, Number(n) || 0)));
+        return true;
+      }
+    } catch (e) { /* first run */ }
+    return false;
+  }
+
+  function buildPhases() {
+    phases = [];
+    seconds.forEach((s, i) => { if (s > 0) phases.push({ labelIndex: i, seconds: s }); });
+    if (!phases.length) phases.push({ labelIndex: 0, seconds: 1 }); // guard: never let every phase be 0
+  }
+
+  function totalCycleSeconds() { return phases.reduce((s, p) => s + p.seconds, 0); }
+
+  function renderPresets() {
+    els['breath-presets'].innerHTML = '';
+    PRESETS.forEach(p => {
+      const btn = document.createElement('button');
+      btn.textContent = p.name;
+      btn.className = arraysEqual(seconds, p.seconds) ? 'active' : '';
+      btn.addEventListener('click', () => applySeconds(p.seconds.slice()));
+      els['breath-presets'].appendChild(btn);
+    });
+    const match = PRESETS.find(p => arraysEqual(seconds, p.seconds));
+    els['breath-desc'].textContent = match ? match.desc : 'Custom timing — set your own inhale, hold, exhale and hold.';
+  }
+
+  function arraysEqual(a, b) { return a.length === b.length && a.every((v, i) => v === b[i]); }
+
+  function renderControls() {
+    els['breath-controls'].innerHTML = '';
+    LABELS.forEach((label, i) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'breath-stepper';
+      const lab = document.createElement('div');
+      lab.className = 'label';
+      lab.textContent = label;
+      const row = document.createElement('div');
+      row.className = 'row';
+      const minus = document.createElement('button');
+      minus.textContent = '–';
+      minus.addEventListener('click', () => nudge(i, -1));
+      const val = document.createElement('span');
+      val.className = 'val' + (seconds[i] === 0 ? ' skip' : '');
+      val.textContent = seconds[i] === 0 ? 'skip' : seconds[i] + 's';
+      const plus = document.createElement('button');
+      plus.textContent = '+';
+      plus.addEventListener('click', () => nudge(i, 1));
+      row.append(minus, val, plus);
+      wrap.append(lab, row);
+      els['breath-controls'].appendChild(wrap);
+    });
+  }
+
+  function nudge(i, delta) {
+    seconds[i] = Math.max(0, Math.min(60, seconds[i] + delta));
+    applySeconds(seconds);
+  }
+
+  function renderPhasebar() {
+    els['breath-phasebar'].innerHTML = '';
+    phases.forEach(() => {
+      const seg = document.createElement('div');
+      seg.className = 'seg';
+      seg.innerHTML = '<div class="fill"></div>';
+      els['breath-phasebar'].appendChild(seg);
+    });
+  }
+
+  function applySeconds(next) {
+    seconds = next.map(n => Math.max(0, Math.min(60, n)));
+    save();
+    stop();
+    buildPhases();
+    phaseIdx = 0;
+    cycles = 0;
+    renderPresets();
+    renderControls();
+    renderPhasebar();
+    enterPhase(true);
+  }
+
+  // CSS transitions run on wall-clock time once triggered — they don't know our
+  // countdown is paused. So pausing has to read the circle's current interpolated
+  // size and pin it there; resuming re-triggers a transition for the *remaining*
+  // time only, from wherever it was pinned.
+  function currentCircleScale() {
+    const t = getComputedStyle(els['breath-circle']).transform;
+    const m = t.match(/matrix\(([-0-9.eE]+),/);
+    return m ? parseFloat(m[1]) : 0.62;
+  }
+
+  function freezeCircle() {
+    const s = currentCircleScale();
+    els['breath-circle'].style.transitionDuration = '0s';
+    els['breath-circle'].style.transform = 'scale(' + s + ')';
+  }
+
+  function enterPhase(instant, durationOverride) {
+    const p = phases[phaseIdx];
+    els['breath-phase'].textContent = LABELS[p.labelIndex];
+    els['breath-count'].textContent = Math.ceil(durationOverride != null ? durationOverride : p.seconds);
+    const growsOrShrinks = p.labelIndex === 0 || p.labelIndex === 2;
+    if (instant || !growsOrShrinks) {
+      // Booting/resetting, or a hold phase: snap instantly, nothing to animate.
+      els['breath-circle'].style.transitionDuration = '0s';
+      els['breath-circle'].style.transform = 'scale(' + PRE_SCALE[p.labelIndex] + ')';
+    } else {
+      const dur = durationOverride != null ? durationOverride : p.seconds;
+      els['breath-circle'].style.transitionDuration = Math.max(0.05, dur) + 's';
+      els['breath-circle'].style.transform = 'scale(' + (p.labelIndex === 0 ? 1.15 : 0.62) + ')'; // 0=inhale grows, 2=exhale shrinks
+    }
+    document.querySelectorAll('#breath-phasebar .seg').forEach((seg, i) => {
+      seg.classList.toggle('current', i === phaseIdx);
+      seg.querySelector('.fill').style.width = i < phaseIdx ? '100%' : '0%';
+    });
+    updateStats(0);
+  }
+
+  function updateStats(currentElapsed) {
+    const prior = phases.slice(0, phaseIdx).reduce((s, p) => s + p.seconds, 0);
+    const total = cycles * totalCycleSeconds() + prior + currentElapsed;
+    const mm = Math.floor(total / 60);
+    const ss = Math.floor(total % 60);
+    els['breath-stats'].textContent = cycles + (cycles === 1 ? ' cycle · ' : ' cycles · ') +
+      mm + ':' + String(ss).padStart(2, '0');
+  }
+
+  function renderTick(remaining, elapsed) {
+    const p = phases[phaseIdx];
+    els['breath-count'].textContent = Math.max(0, Math.ceil(remaining));
+    const seg = document.querySelectorAll('#breath-phasebar .seg')[phaseIdx];
+    if (seg) seg.querySelector('.fill').style.width = (Math.min(1, elapsed / p.seconds) * 100) + '%';
+    updateStats(elapsed);
+  }
+
+  function tick() {
+    if (!running) return;
+    const p = phases[phaseIdx];
+    const elapsed = pausedElapsed + (Date.now() - startTs) / 1000;
+    const remaining = p.seconds - elapsed;
+    if (remaining <= 0) advancePhase(); else renderTick(remaining, elapsed);
+  }
+
+  function advancePhase() {
+    phaseIdx++;
+    if (phaseIdx >= phases.length) { phaseIdx = 0; cycles++; }
+    pausedElapsed = 0;
+    startTs = Date.now();
+    enterPhase(false);
+  }
+
+  function start() {
+    if (running) return;
+    running = true;
+    startTs = Date.now();
+    const p = phases[phaseIdx];
+    enterPhase(false, p.seconds - pausedElapsed);   // fresh phase, or resuming a frozen one — same call either way
+    els['breath-startpause'].textContent = 'Pause';
+    if (!tickId) tickId = setInterval(tick, 150);
+  }
+
+  function stop() {
+    running = false;
+    pausedElapsed = 0;
+    startTs = null;
+    els['breath-startpause'].textContent = 'Start';
+  }
+
+  function pause() {
+    if (!running) return;
+    const p = phases[phaseIdx];
+    pausedElapsed = Math.min(p.seconds, pausedElapsed + (Date.now() - startTs) / 1000);
+    running = false;
+    freezeCircle();
+    els['breath-startpause'].textContent = 'Resume';
+  }
+
+  function reset() {
+    stop();
+    phaseIdx = 0;
+    cycles = 0;
+    enterPhase(true);
+  }
+
+  function wireControls() {
+    els['breath-startpause'].addEventListener('click', () => { running ? pause() : start(); });
+    els['breath-reset'].addEventListener('click', reset);
+  }
+
+  function boot() {
+    if (loaded) return;
+    loaded = true;
+    const hadStored = load();
+    cacheEls();
+    wireControls();
+    fetch('breathing/presets.json')
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(data => {
+        PRESETS = data.presets;
+        if (!hadStored) seconds = PRESETS[0].seconds.slice();
+        buildPhases();
+        renderPresets();
+        renderControls();
+        renderPhasebar();
+        enterPhase(true);
+      })
+      .catch(err => {
+        els['breath-phase'].textContent = 'Could not load presets';
+        els['breath-desc'].textContent = err.message;
+      });
+  }
+
+  return { boot: boot };
+})();
+
+// ===========================================================================
+// TABS. Wired up last, deliberately: it calls into Gym and Breath by name,
+// so both of those need to already exist above this point in the file.
+// Which tab is showing is remembered on the device, same as everything else
+// here. More tabs later just need a button plus a matching .tab-panel.
+// ===========================================================================
+const TAB_KEY = 'app.tab.v1';
+
+function showTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(el => el.classList.toggle('active', el.id === 'tab-' + name));
+  document.querySelectorAll('#tabbar button').forEach(el => el.classList.toggle('active', el.id === 'tab-btn-' + name));
+  try { localStorage.setItem(TAB_KEY, name); } catch (e) { /* private mode */ }
+  if (name === 'gym') Gym.boot();
+  if (name === 'breathing') Breath.boot();
+}
+
+document.getElementById('tab-btn-incantation').addEventListener('click', () => showTab('incantation'));
+document.getElementById('tab-btn-gym').addEventListener('click', () => showTab('gym'));
+document.getElementById('tab-btn-breathing').addEventListener('click', () => showTab('breathing'));
+
+const startTabName = ['gym', 'breathing'].includes(localStorage.getItem(TAB_KEY)) ? localStorage.getItem(TAB_KEY) : 'incantation';
+showTab(startTabName);
 </script>
 </body>
 </html>

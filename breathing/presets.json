@@ -1,0 +1,13 @@
+{
+  "_readme": "Breathing presets. 'seconds' is [inhale, hold, exhale, hold] — a 0 means that phase is skipped, which is how 4-7-8 (no second hold) and coherent breathing (no holds at all) reuse the same four-number shape instead of needing a special case. The app's steppers can override any of these; only the last-used seconds are remembered on the device, not which preset they came from.",
+  "presets": [
+    { "id": "box",       "name": "Box breathing", "seconds": [4, 4, 4, 4],
+      "desc": "Equal 4-count square. Tactical/Navy SEAL \"combat breathing\" used to stay calm under acute stress." },
+    { "id": "478",       "name": "4-7-8",         "seconds": [4, 7, 8, 0],
+      "desc": "Dr. Andrew Weil's technique: one hold, then a long exhale, to settle anxiety or ease into sleep." },
+    { "id": "coherent",  "name": "Coherent",      "seconds": [6, 0, 6, 0],
+      "desc": "No holds — smooth pacing at ~5 breaths/min, the resonance rate shown to maximise heart-rate variability." },
+    { "id": "pursedlip", "name": "Pursed-lip",    "seconds": [2, 0, 4, 0],
+      "desc": "Short nasal inhale, exhale twice as long through pursed lips. Standard technique to ease breathlessness." }
+  ]
+}
