@@ -36,6 +36,7 @@
     background: radial-gradient(120% 90% at 50% 0%, #1a1f2b 0%, var(--bg) 60%);
     color: var(--ink);
     font-family: ui-serif, Georgia, "Times New Roman", serif;
+    -webkit-font-smoothing: antialiased;
     display: flex;
     flex-direction: column;
     padding: calc(env(safe-area-inset-top) + 1.25rem) 1.25rem calc(env(safe-area-inset-bottom) + 1rem);
@@ -99,13 +100,14 @@
     letter-spacing: 0.13em;
     text-transform: uppercase;
     color: var(--ink);
-    background: transparent;
+    background: rgba(255,255,255,0.04);
     border: 1px solid var(--line);
     border-radius: 999px;
     padding: 0.75rem 1.25rem;
     cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
   }
-  button:active { background: #1a2030; }
+  button:active { background: #1a2030; transform: scale(0.96); }
   button:disabled { opacity: 0.35; }
 
   #love.on { border-color: var(--gold); color: var(--gold); }
@@ -123,26 +125,41 @@
   #back { visibility: hidden; }
   #back.show { visibility: visible; }
 
-  /* ---- Tabs ---- */
+  /* ---- Tabs (bottom, frosted-glass, iOS-style) ---- */
   #tabbar {
+    order: 99;
     flex: 0 0 auto;
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
-    padding-bottom: 1rem;
+    gap: 0.3rem;
+    padding: 0.55rem 0.4rem;
+    margin-top: 0.9rem;
+    background: rgba(17, 20, 28, 0.72);
+    backdrop-filter: blur(22px) saturate(1.4);
+    -webkit-backdrop-filter: blur(22px) saturate(1.4);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 22px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
   }
   #tabbar button {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
     font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-size: 0.6rem;
+    letter-spacing: 0.03em;
     color: var(--dim);
     background: transparent;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 16px;
+    padding: 0.4rem 0.2rem;
   }
-  #tabbar button.active { color: var(--ink); border-color: var(--gold); }
+  #tabbar button svg { width: 1.3rem; height: 1.3rem; display: block; margin: 0 auto; }
+  #tabbar button.active { color: var(--gold); background: rgba(217, 169, 76, 0.12); }
+  #tabbar button:active { background: rgba(255,255,255,0.06); }
 
   .tab-panel { display: none; flex: 1 1 auto; flex-direction: column; min-height: 0; }
   .tab-panel.active { display: flex; }
@@ -172,9 +189,10 @@
     max-width: 22rem;
     flex: 1 1 auto;
     min-height: 0;
-    border-radius: 18px;
+    border-radius: 22px;
     overflow: hidden;
     background: #12161f;
+    box-shadow: 0 14px 34px rgba(0,0,0,0.4);
   }
   .gym-photo-wrap img {
     width: 100%;
@@ -235,7 +253,15 @@
     color: var(--dim);
   }
   .gym-footer { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
-  #gym-startpause { min-width: 8rem; }
+  #gym-startpause, #gym-done-restart {
+    min-width: 8rem;
+    background: var(--gold);
+    color: #1c1204;
+    border-color: var(--gold);
+    font-weight: 600;
+    box-shadow: 0 8px 20px rgba(217,169,76,0.3);
+  }
+  #gym-startpause:active, #gym-done-restart:active { background: #c89a3f; }
   .gym-done {
     display: none;
     position: absolute;
@@ -302,6 +328,7 @@
     justify-content: center;
     flex: 1 1 auto;
     min-height: 0;
+    filter: drop-shadow(0 10px 26px rgba(123,167,194,0.22));
   }
   .breath-circle {
     position: absolute;
@@ -378,21 +405,96 @@
     font-variant-numeric: tabular-nums;
   }
   .breath-footer { flex: 0 0 auto; display: flex; justify-content: center; gap: 0.6rem; padding-top: 0.4rem; }
-  #breath-startpause { min-width: 8rem; }
+  #breath-startpause {
+    min-width: 8rem;
+    background: var(--sky);
+    color: #071620;
+    border-color: var(--sky);
+    font-weight: 600;
+    box-shadow: 0 8px 20px rgba(123,167,194,0.3);
+  }
+  #breath-startpause:active { background: #6a93ab; }
 
-  /* ---- Manage panel ---- */
+  /* ---- History ---- */
+  .hist-main {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0.4rem 0 0.5rem;
+  }
+  .hist-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 1rem;
+  }
+  .hist-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  }
+  .hist-title .name { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
+  .hist-title .streak { font-size: 0.68rem; letter-spacing: 0.02em; color: var(--dim); }
+  .hist-stats { display: flex; gap: 0.5rem; }
+  .hist-stat {
+    flex: 1 1 0;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 0.55rem 0.3rem;
+    text-align: center;
+    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  }
+  .hist-stat .n { font-size: 1.2rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); display: block; line-height: 1.2; }
+  .hist-stat .l { font-size: 0.56rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dim); }
+  .heat-grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, 1fr);
+    gap: 3px;
+    justify-content: center;
+    padding-top: 0.2rem;
+  }
+  .heat-cell { width: 11px; height: 11px; border-radius: 3px; background: var(--line); }
+  .heat-cell.empty { background: transparent; }
+  .heat-cell.gym-1 { background: rgba(217,169,76,0.4); }
+  .heat-cell.gym-2 { background: var(--gold); }
+  .heat-cell.breath-1 { background: rgba(123,167,194,0.4); }
+  .heat-cell.breath-2 { background: var(--sky); }
+
+  /* ---- Manage panel: bottom sheet ---- */
   #panel {
     position: fixed;
-    inset: 0;
+    left: 0; right: 0; bottom: 0; top: 8%;
     background: #0b0d12;
-    display: none;
+    display: flex;
     flex-direction: column;
-    padding: calc(env(safe-area-inset-top) + 1rem) 1.1rem calc(env(safe-area-inset-bottom) + 1rem);
+    padding: 0.65rem 1.1rem calc(env(safe-area-inset-bottom) + 1rem);
     text-align: left;
     font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
     z-index: 10;
+    border-radius: 26px 26px 0 0;
+    box-shadow: 0 -16px 44px rgba(0,0,0,0.5);
+    transform: translateY(105%);
+    transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+    pointer-events: none;
   }
-  #panel.open { display: flex; }
+  #panel.open { transform: translateY(0); pointer-events: auto; }
+  #panel .grabber {
+    flex: 0 0 auto;
+    width: 2.4rem;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--line);
+    margin: 0.3rem auto 0.5rem;
+  }
   #panel h2 { font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); margin: 1.1rem 0 0.5rem; font-weight: 600; }
   #panel .scroll { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; }
   #panel .item { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.55rem 0; border-bottom: 1px solid #171c26; font-size: 0.82rem; line-height: 1.4; color: #cfd6e2; }
@@ -408,9 +510,22 @@
 <body>
 
 <nav id="tabbar">
-  <button id="tab-btn-incantation" class="active">Incantation</button>
-  <button id="tab-btn-gym">Gym</button>
-  <button id="tab-btn-breathing">Breathing</button>
+  <button id="tab-btn-incantation" class="active">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c.5 3.2 1.6 5.6 3.2 7.2 1.6 1.6 4 2.7 7.2 3.2-3.2.5-5.6 1.6-7.2 3.2-1.6 1.6-2.7 4-3.2 7.2-.5-3.2-1.6-5.6-3.2-7.2-1.6-1.6-4-2.7-7.2-3.2 3.2-.5 5.6-1.6 7.2-3.2 1.6-1.6 2.7-4 3.2-7.2z"/></svg>
+    <span>Incantation</span>
+  </button>
+  <button id="tab-btn-gym">
+    <svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="9" width="3" height="6" rx="1"/><rect x="19" y="9" width="3" height="6" rx="1"/><rect x="6" y="7" width="2.5" height="10" rx="1"/><rect x="15.5" y="7" width="2.5" height="10" rx="1"/><rect x="8" y="11" width="8" height="2" rx="1"/></svg>
+    <span>Gym</span>
+  </button>
+  <button id="tab-btn-breathing">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 8h11a2.5 2.5 0 100-5"/><path d="M3 13h15a2.5 2.5 0 110 5"/><path d="M3 18h8"/></svg>
+    <span>Breathing</span>
+  </button>
+  <button id="tab-btn-history">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+    <span>History</span>
+  </button>
 </nav>
 
 <section id="tab-incantation" class="tab-panel active">
@@ -495,7 +610,36 @@
 
 </section>
 
+<section id="tab-history" class="tab-panel">
+
+  <header class="gym-header">Your history</header>
+
+  <main class="hist-main">
+    <div class="hist-section">
+      <div class="hist-title"><span class="name">Gym</span><span class="streak" id="hist-gym-streak"></span></div>
+      <div class="hist-stats">
+        <div class="hist-stat"><span class="n" id="hist-gym-week">0</span><span class="l">This week</span></div>
+        <div class="hist-stat"><span class="n" id="hist-gym-total">0</span><span class="l">Sessions</span></div>
+        <div class="hist-stat"><span class="n" id="hist-gym-minutes">0</span><span class="l">Minutes</span></div>
+      </div>
+      <div class="heat-grid" id="hist-gym-grid"></div>
+    </div>
+
+    <div class="hist-section">
+      <div class="hist-title"><span class="name">Breathing</span><span class="streak" id="hist-breath-streak"></span></div>
+      <div class="hist-stats">
+        <div class="hist-stat"><span class="n" id="hist-breath-week">0</span><span class="l">This week</span></div>
+        <div class="hist-stat"><span class="n" id="hist-breath-total">0</span><span class="l">Sessions</span></div>
+        <div class="hist-stat"><span class="n" id="hist-breath-minutes">0</span><span class="l">Minutes</span></div>
+      </div>
+      <div class="heat-grid" id="hist-breath-grid"></div>
+    </div>
+  </main>
+
+</section>
+
 <div id="panel">
+  <div class="grabber"></div>
   <button id="close-panel" class="quiet" style="align-self:flex-end">Close ✕</button>
   <div class="scroll">
     <h2>Paste this to Claude to prune the file</h2>
@@ -759,6 +903,105 @@ document.addEventListener('visibilitychange', () => {
 });
 
 // ===========================================================================
+// HISTORY. One entry per calendar day per activity, keyed by local date
+// ('en-CA' => YYYY-MM-DD), so the record never grows heavier no matter how
+// long the app gets used — a day that happens twice just bumps its counts.
+// ===========================================================================
+const History = (() => {
+  const KEY = 'ritual.history.v1';
+  let data = { gym: {}, breathing: {} };
+
+  function load() {
+    try { data = Object.assign({ gym: {}, breathing: {} }, JSON.parse(localStorage.getItem(KEY)) || {}); }
+    catch (e) { data = { gym: {}, breathing: {} }; }
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) { /* private mode */ } }
+
+  const dayKey = d => (d || new Date()).toLocaleDateString('en-CA');
+
+  function bump(bucket, minutes) {
+    const k = dayKey();
+    const cur = bucket[k] || { sessions: 0, minutes: 0 };
+    bucket[k] = { sessions: cur.sessions + 1, minutes: +(cur.minutes + minutes).toFixed(1) };
+  }
+
+  function logGym(minutes) { load(); bump(data.gym, minutes); save(); }
+  function logBreathing(seconds) { load(); bump(data.breathing, seconds / 60); save(); }
+
+  function streak(bucket) {
+    let n = 0;
+    const d = new Date();
+    while (bucket[dayKey(d)]) { n++; d.setDate(d.getDate() - 1); }
+    return n;
+  }
+
+  function weekCount(bucket) {
+    let n = 0;
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      if (bucket[dayKey(d)]) n++;
+    }
+    return n;
+  }
+
+  function totals(bucket) {
+    return Object.values(bucket).reduce(
+      (acc, v) => ({ sessions: acc.sessions + v.sessions, minutes: acc.minutes + v.minutes }),
+      { sessions: 0, minutes: 0 }
+    );
+  }
+
+  const WEEKS = 12; // ~3 months, enough to see a pattern without crowding a phone screen
+
+  function renderGrid(gridEl, bucket, levelClass) {
+    gridEl.innerHTML = '';
+    const days = WEEKS * 7;
+    const end = new Date();
+    const start = new Date(end); start.setDate(end.getDate() - (days - 1));
+    const leadIn = start.getDay(); // pad so every column starts on Sunday
+    for (let i = 0; i < leadIn; i++) {
+      const pad = document.createElement('div');
+      pad.className = 'heat-cell empty';
+      gridEl.appendChild(pad);
+    }
+    for (let i = 0; i < days; i++) {
+      const d = new Date(start); d.setDate(start.getDate() + i);
+      const entry = bucket[dayKey(d)];
+      const cell = document.createElement('div');
+      cell.className = 'heat-cell';
+      if (entry) {
+        cell.classList.add(levelClass + (entry.sessions > 1 || entry.minutes >= 10 ? '-2' : '-1'));
+        cell.title = dayKey(d) + ' · ' + entry.sessions + (entry.sessions === 1 ? ' session' : ' sessions');
+      } else {
+        cell.title = dayKey(d);
+      }
+      gridEl.appendChild(cell);
+    }
+  }
+
+  const fmtMinutes = m => Math.round(m * 10) / 10;
+
+  function renderStats(prefix, bucket) {
+    const t = totals(bucket);
+    const s = streak(bucket);
+    document.getElementById('hist-' + prefix + '-streak').textContent = s ? s + '-day streak' : '';
+    document.getElementById('hist-' + prefix + '-week').textContent = weekCount(bucket);
+    document.getElementById('hist-' + prefix + '-total').textContent = t.sessions;
+    document.getElementById('hist-' + prefix + '-minutes').textContent = fmtMinutes(t.minutes);
+  }
+
+  function render() {
+    load();
+    renderStats('gym', data.gym);
+    renderStats('breath', data.breathing);
+    renderGrid(document.getElementById('hist-gym-grid'), data.gym, 'gym');
+    renderGrid(document.getElementById('hist-breath-grid'), data.breathing, 'breath');
+  }
+
+  return { logGym, logBreathing, render };
+})();
+
+// ===========================================================================
 // GYM. 15 movements, a minute each, back to back. The countdown is driven off
 // a start timestamp rather than a tick counter, so it stays accurate even if
 // the tab was backgrounded for a moment.
@@ -892,6 +1135,7 @@ const Gym = (() => {
     running = false;
     releaseWakeLock();
     const totalMin = movements.reduce((s, m) => s + m.seconds, 0) / 60;
+    History.logGym(totalMin);
     els['gym-done-summary'].textContent = movements.length + ' movements · ' + totalMin + ' minutes';
     els['gym-done'].classList.add('open');
     document.querySelectorAll('#gym-segments .seg').forEach(seg => {
@@ -956,6 +1200,7 @@ const Breath = (() => {
   let pausedElapsed = 0;
   let tickId = null;
   let loaded = false;
+  let loggedSeconds = 0;    // how much of the current session History already has, so leaving/returning to the tab never double-counts
 
   const els = {};
   function cacheEls() {
@@ -985,6 +1230,24 @@ const Breath = (() => {
   }
 
   function totalCycleSeconds() { return phases.reduce((s, p) => s + p.seconds, 0); }
+
+  // Same shape as updateStats' `total`, but callable any time (not just mid-tick),
+  // so a tab switch or app close can log whatever practice happened so far.
+  function currentTotalSeconds() {
+    const prior = phases.slice(0, phaseIdx).reduce((s, p) => s + p.seconds, 0);
+    const elapsed = running ? pausedElapsed + (Date.now() - startTs) / 1000 : pausedElapsed;
+    return cycles * totalCycleSeconds() + prior + elapsed;
+  }
+
+  // Logs only the *new* practice time since the last log, so pausing, switching
+  // tabs and coming back never counts the same seconds twice. Ignores dregs
+  // under 20s so an accidental tap-through doesn't clutter the history.
+  function logSession() {
+    const total = currentTotalSeconds();
+    const delta = total - loggedSeconds;
+    if (delta >= 20) History.logBreathing(delta);
+    loggedSeconds = total;
+  }
 
   function renderPresets() {
     els['breath-presets'].innerHTML = '';
@@ -1151,9 +1414,11 @@ const Breath = (() => {
   }
 
   function reset() {
+    logSession();   // capture whatever was practiced before the counters clear
     stop();
     phaseIdx = 0;
     cycles = 0;
+    loggedSeconds = 0;
     enterPhase(true);
   }
 
@@ -1185,7 +1450,7 @@ const Breath = (() => {
       });
   }
 
-  return { boot: boot };
+  return { boot: boot, endSession: logSession };
 })();
 
 // ===========================================================================
@@ -1197,18 +1462,32 @@ const Breath = (() => {
 const TAB_KEY = 'app.tab.v1';
 
 function showTab(name) {
+  const leavingBreathing = document.getElementById('tab-breathing').classList.contains('active') && name !== 'breathing';
+  if (leavingBreathing) Breath.endSession();   // banks whatever was practiced before switching away
   document.querySelectorAll('.tab-panel').forEach(el => el.classList.toggle('active', el.id === 'tab-' + name));
   document.querySelectorAll('#tabbar button').forEach(el => el.classList.toggle('active', el.id === 'tab-btn-' + name));
   try { localStorage.setItem(TAB_KEY, name); } catch (e) { /* private mode */ }
   if (name === 'gym') Gym.boot();
   if (name === 'breathing') Breath.boot();
+  if (name === 'history') History.render();
 }
+
+// Closing the app (or the phone locking) while mid-session should still count.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible' && document.getElementById('tab-breathing').classList.contains('active')) {
+    Breath.endSession();
+  }
+});
+window.addEventListener('beforeunload', () => {
+  if (document.getElementById('tab-breathing').classList.contains('active')) Breath.endSession();
+});
 
 document.getElementById('tab-btn-incantation').addEventListener('click', () => showTab('incantation'));
 document.getElementById('tab-btn-gym').addEventListener('click', () => showTab('gym'));
 document.getElementById('tab-btn-breathing').addEventListener('click', () => showTab('breathing'));
+document.getElementById('tab-btn-history').addEventListener('click', () => showTab('history'));
 
-const startTabName = ['gym', 'breathing'].includes(localStorage.getItem(TAB_KEY)) ? localStorage.getItem(TAB_KEY) : 'incantation';
+const startTabName = ['gym', 'breathing', 'history'].includes(localStorage.getItem(TAB_KEY)) ? localStorage.getItem(TAB_KEY) : 'incantation';
 showTab(startTabName);
 </script>
 </body>
