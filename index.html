@@ -13,29 +13,31 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Ritual">
 
-<meta name="theme-color" content="#0d0f14">
+<meta name="theme-color" content="#000000">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
 
 <style>
   :root {
-    --bg: #0d0f14;
-    --ink: #f4f1ea;
-    --dim: #7c8698;
-    --line: #313a4d;
-    --gold: #d9a94c;
-    --rose: #c8697a;
-    --sky: #7ba7c2;
+    --bg: #000000;
+    --ink: #ffffff;
+    --dim: #808080;
+    --line: #ffffff;
+    --line-soft: #3a3a3a;
+    --yellow: #ffff00;
+    --red: #ff0000;
+    --blue: #0000ff;
+    --mono: "Courier New", ui-monospace, SFMono-Regular, Menlo, monospace;
   }
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; margin: 0; }
 
   body {
-    background: radial-gradient(120% 90% at 50% 0%, #1a1f2b 0%, var(--bg) 60%);
+    background: var(--bg);
     color: var(--ink);
-    font-family: ui-serif, Georgia, "Times New Roman", serif;
+    font-family: var(--mono);
     -webkit-font-smoothing: antialiased;
     display: flex;
     flex-direction: column;
@@ -45,15 +47,18 @@
     user-select: none;
   }
 
-  .sans { font-family: ui-sans-serif, -apple-system, system-ui, sans-serif; }
+  .sans { font-family: var(--mono); }
 
   header {
     flex: 0 0 auto;
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-family: var(--mono);
     color: var(--dim);
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
+    font-weight: 700;
+    border-bottom: 2px solid var(--line-soft);
+    padding-bottom: 0.6rem;
   }
 
   main {
@@ -69,77 +74,84 @@
 
   /* clamp() scales type with the screen. pre-line keeps the line breaks from the JSON. */
   #text {
+    font-family: var(--mono);
+    font-weight: 700;
     font-size: clamp(1.35rem, 5.2vw, 2.3rem);
-    line-height: 1.45;
+    line-height: 1.35;
     white-space: pre-line;
     margin: 0;
     max-width: 34ch;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s linear;
   }
   #text.long { font-size: clamp(1.05rem, 4vw, 1.6rem); }
   #text.fading { opacity: 0; }
 
   #attribution {
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
-    font-size: 0.76rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
     color: var(--dim);
-    letter-spacing: 0.03em;
+    letter-spacing: 0.02em;
     max-width: 32ch;
     line-height: 1.5;
     margin: 0;
+    text-transform: uppercase;
+    border-top: 1px solid var(--line-soft);
+    padding-top: 0.6rem;
   }
-  #attribution.unverified { color: var(--gold); }
+  #attribution.unverified { color: #000; background: var(--yellow); border-top: none; padding: 0.3rem 0.6rem; }
 
   footer { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.9rem; }
 
   .verdict { display: flex; gap: 0.75rem; }
 
   button {
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-family: var(--mono);
     font-size: 0.75rem;
-    letter-spacing: 0.13em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
+    font-weight: 700;
     color: var(--ink);
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--line);
-    border-radius: 999px;
+    background: transparent;
+    border: 2px solid var(--line);
+    border-radius: 0;
     padding: 0.75rem 1.25rem;
     cursor: pointer;
-    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    transition: background 0.15s linear, color 0.15s linear, transform 0.1s linear;
   }
-  button:active { background: #1a2030; transform: scale(0.96); }
-  button:disabled { opacity: 0.35; }
+  button:active { background: var(--ink); color: #000; transform: translate(2px, 2px); }
+  button:disabled { opacity: 0.3; border-color: var(--line-soft); }
 
-  #love.on { border-color: var(--gold); color: var(--gold); }
-  #drop { border-color: #3d2a30; color: var(--rose); }
+  #love.on { background: var(--yellow); border-color: var(--yellow); color: #000; }
+  #drop { border-color: var(--red); color: var(--red); }
+  #drop:active { background: var(--red); color: #000; }
 
   .quiet {
     border: none;
     color: var(--dim);
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    font-weight: 700;
     padding: 0.4rem 0.6rem;
   }
+  .quiet:active { background: transparent; color: var(--ink); transform: none; }
 
   .row { display: flex; gap: 0.5rem; align-items: center; }
   #back { visibility: hidden; }
   #back.show { visibility: visible; }
 
-  /* ---- Tabs (bottom, frosted-glass, iOS-style) ---- */
+  /* ---- Tabs (bottom, hard-edged) ---- */
   #tabbar {
     order: 99;
     flex: 0 0 auto;
     display: flex;
     justify-content: center;
-    gap: 0.3rem;
-    padding: 0.55rem 0.4rem;
+    gap: 0;
+    padding: 0;
     margin-top: 0.9rem;
-    background: rgba(17, 20, 28, 0.72);
-    backdrop-filter: blur(22px) saturate(1.4);
-    -webkit-backdrop-filter: blur(22px) saturate(1.4);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 22px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    background: var(--bg);
+    border-top: 3px solid var(--line);
+    border-radius: 0;
+    z-index: 100;
   }
   #tabbar button {
     flex: 1 1 0;
@@ -147,19 +159,22 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.2rem;
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    gap: 0.25rem;
+    font-family: var(--mono);
     font-size: 0.6rem;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
+    font-weight: 700;
     color: var(--dim);
     background: transparent;
     border: none;
-    border-radius: 16px;
-    padding: 0.4rem 0.2rem;
+    border-right: 1px solid var(--line-soft);
+    border-radius: 0;
+    padding: 0.6rem 0.2rem;
   }
+  #tabbar button:last-child { border-right: none; }
   #tabbar button svg { width: 1.3rem; height: 1.3rem; display: block; margin: 0 auto; }
-  #tabbar button.active { color: var(--gold); background: rgba(217, 169, 76, 0.12); }
-  #tabbar button:active { background: rgba(255,255,255,0.06); }
+  #tabbar button.active { color: #000; background: var(--yellow); }
+  #tabbar button:active { background: var(--line-soft); }
 
   .tab-panel { display: none; flex: 1 1 auto; flex-direction: column; min-height: 0; }
   .tab-panel.active { display: flex; }
@@ -167,12 +182,15 @@
   /* ---- Gym ---- */
   .gym-header {
     flex: 0 0 auto;
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-family: var(--mono);
     color: var(--dim);
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
+    font-weight: 700;
     text-align: center;
+    border-bottom: 2px solid var(--line-soft);
+    padding-bottom: 0.6rem;
   }
   .gym-main {
     flex: 1 1 auto;
@@ -189,95 +207,103 @@
     max-width: 22rem;
     flex: 1 1 auto;
     min-height: 0;
-    border-radius: 22px;
+    border: 3px solid var(--line);
+    border-radius: 0;
     overflow: hidden;
-    background: #12161f;
-    box-shadow: 0 14px 34px rgba(0,0,0,0.4);
+    background: #000;
   }
   .gym-photo-wrap img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+    filter: grayscale(1) contrast(1.15);
   }
   .gym-timer {
     position: absolute;
-    top: 0.7rem;
-    right: 0.7rem;
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    top: 0;
+    right: 0;
+    font-family: var(--mono);
     font-size: 1.4rem;
-    font-weight: 600;
-    color: var(--ink);
-    background: rgba(13, 15, 20, 0.55);
-    backdrop-filter: blur(6px);
-    border-radius: 999px;
+    font-weight: 700;
+    color: #000;
+    background: var(--yellow);
+    border-left: 3px solid var(--line);
+    border-bottom: 3px solid var(--line);
+    border-radius: 0;
     padding: 0.35rem 0.85rem;
     font-variant-numeric: tabular-nums;
   }
-  .gym-timer.urgent { color: var(--rose); }
+  .gym-timer.urgent { color: #fff; background: var(--red); }
   .gym-name-badge {
     position: absolute;
     left: 0; right: 0; bottom: 0;
-    padding: 2.2rem 1rem 0.9rem;
-    background: linear-gradient(180deg, transparent, rgba(6,7,10,0.88) 70%);
+    padding: 0.7rem 1rem;
+    background: #000;
+    border-top: 3px solid var(--line);
     color: var(--ink);
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
-    font-size: 1.15rem;
-    font-weight: 600;
+    font-family: var(--mono);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     text-align: center;
   }
   .gym-segments {
     flex: 0 0 auto;
     display: flex;
-    gap: 3px;
+    gap: 2px;
     width: 100%;
     max-width: 22rem;
   }
   .gym-segments .seg {
     flex: 1 1 auto;
-    height: 3px;
-    border-radius: 2px;
-    background: var(--line);
+    height: 6px;
+    border-radius: 0;
+    background: var(--line-soft);
     overflow: hidden;
   }
   .gym-segments .seg .fill {
     height: 100%;
     width: 0%;
-    background: var(--gold);
+    background: var(--yellow);
   }
   .gym-segments .seg.done .fill { width: 100%; }
   .gym-next {
     flex: 0 0 auto;
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
-    font-size: 0.78rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
     color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
   }
   .gym-footer { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
   #gym-startpause, #gym-done-restart {
     min-width: 8rem;
-    background: var(--gold);
-    color: #1c1204;
-    border-color: var(--gold);
-    font-weight: 600;
-    box-shadow: 0 8px 20px rgba(217,169,76,0.3);
+    background: var(--yellow);
+    color: #000;
+    border-color: #000;
+    border-width: 2px;
+    font-weight: 700;
   }
-  #gym-startpause:active, #gym-done-restart:active { background: #c89a3f; }
+  #gym-startpause:active, #gym-done-restart:active { background: #000; color: var(--yellow); border-color: var(--yellow); }
   .gym-done {
     display: none;
     position: absolute;
     inset: 0;
-    background: rgba(11, 13, 18, 0.97);
+    background: #000;
+    border-top: 4px solid var(--yellow);
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 0.6rem;
     text-align: center;
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
-    z-index: 5;
+    font-family: var(--mono);
+    z-index: 200;
   }
   .gym-done.open { display: flex; }
-  .gym-done p:first-child { font-size: 1.4rem; color: var(--gold); font-family: ui-serif, Georgia, serif; }
-  .gym-done p:last-child { color: var(--dim); font-size: 0.85rem; }
+  .gym-done p:first-child { font-size: 1.5rem; color: #000; background: var(--yellow); padding: 0.4rem 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+  .gym-done p:last-child { color: var(--dim); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.03em; }
 
   /* ---- Breathing ---- */
   .breath-header {
@@ -285,29 +311,33 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 0.4rem;
+    gap: 0;
+    border-bottom: 2px solid var(--line-soft);
   }
   .breath-header button {
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-family: var(--mono);
     font-size: 0.68rem;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
+    font-weight: 700;
     color: var(--dim);
     background: transparent;
-    border: 1px solid var(--line);
-    border-radius: 999px;
+    border: 2px solid var(--line-soft);
+    border-radius: 0;
     padding: 0.45rem 0.8rem;
+    margin: 0.2rem;
   }
-  .breath-header button.active { color: var(--ink); border-color: var(--sky); }
+  .breath-header button.active { color: #000; border-color: var(--blue); background: var(--blue); }
   .breath-desc {
     flex: 0 0 auto;
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
-    font-size: 0.74rem;
+    font-family: var(--mono);
+    font-size: 0.76rem;
     color: var(--dim);
     text-align: center;
     max-width: 30ch;
     margin: 0.6rem auto 0;
     line-height: 1.4;
+    text-transform: uppercase;
   }
   .breath-main {
     flex: 1 1 auto;
@@ -328,49 +358,52 @@
     justify-content: center;
     flex: 1 1 auto;
     min-height: 0;
-    filter: drop-shadow(0 10px 26px rgba(123,167,194,0.22));
   }
   .breath-circle {
     position: absolute;
     width: 62%;
     height: 62%;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, rgba(123,167,194,0.55), rgba(123,167,194,0.12) 70%);
-    border: 1px solid rgba(123,167,194,0.55);
+    background: var(--blue);
+    border: 3px solid var(--line);
     transform: scale(0.62);
     transition: transform 4s linear;
   }
   .breath-readout { position: relative; text-align: center; z-index: 1; }
   .breath-phase {
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-family: var(--mono);
     font-size: 0.78rem;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--sky);
+    font-weight: 700;
+    color: #000;
+    background: var(--ink);
+    padding: 0.2rem 0.6rem;
+    display: inline-block;
   }
   .breath-count {
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-family: var(--mono);
     font-size: 3rem;
-    font-weight: 600;
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
     color: var(--ink);
   }
   .breath-phasebar {
     flex: 0 0 auto;
     display: flex;
-    gap: 4px;
+    gap: 2px;
     width: 100%;
     max-width: 16rem;
   }
   .breath-phasebar .seg {
     flex: 1 1 auto;
-    height: 3px;
-    border-radius: 2px;
-    background: var(--line);
+    height: 6px;
+    border-radius: 0;
+    background: var(--line-soft);
     overflow: hidden;
   }
-  .breath-phasebar .seg.current { background: rgba(123,167,194,0.35); }
-  .breath-phasebar .seg .fill { height: 100%; width: 0%; background: var(--sky); }
+  .breath-phasebar .seg.current { background: #1a1a1a; }
+  .breath-phasebar .seg .fill { height: 100%; width: 0%; background: var(--blue); }
   .breath-controls {
     flex: 0 0 auto;
     display: flex;
@@ -383,37 +416,38 @@
     flex-direction: column;
     align-items: center;
     gap: 0.3rem;
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-family: var(--mono);
   }
-  .breath-stepper .label { font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
+  .breath-stepper .label { font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: var(--dim); }
   .breath-stepper .row { display: flex; align-items: center; gap: 0.35rem; }
   .breath-stepper button {
-    width: 1.9rem; height: 1.9rem; border-radius: 999px;
-    border: 1px solid var(--line); background: transparent; color: var(--ink);
+    width: 1.9rem; height: 1.9rem; border-radius: 0;
+    border: 2px solid var(--line-soft); background: transparent; color: var(--ink);
     font-size: 0.95rem; line-height: 1; padding: 0;
   }
   .breath-stepper .val {
-    min-width: 1.6rem; text-align: center; font-size: 0.95rem;
+    min-width: 1.6rem; text-align: center; font-size: 0.95rem; font-weight: 700;
     font-variant-numeric: tabular-nums; color: var(--ink);
   }
   .breath-stepper .val.skip { color: var(--dim); }
   .breath-stats {
     flex: 0 0 auto;
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
-    font-size: 0.72rem;
+    font-family: var(--mono);
+    font-size: 0.74rem;
     color: var(--dim);
     font-variant-numeric: tabular-nums;
+    text-transform: uppercase;
   }
   .breath-footer { flex: 0 0 auto; display: flex; justify-content: center; gap: 0.6rem; padding-top: 0.4rem; }
   #breath-startpause {
     min-width: 8rem;
-    background: var(--sky);
-    color: #071620;
-    border-color: var(--sky);
-    font-weight: 600;
-    box-shadow: 0 8px 20px rgba(123,167,194,0.3);
+    background: var(--blue);
+    color: #fff;
+    border-color: #000;
+    border-width: 2px;
+    font-weight: 700;
   }
-  #breath-startpause:active { background: #6a93ab; }
+  #breath-startpause:active { background: #000; color: var(--blue); border-color: var(--blue); }
 
   /* ---- History ---- */
   .hist-main {
@@ -422,68 +456,111 @@
     -webkit-overflow-scrolling: touch;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.25rem;
     padding: 0.4rem 0 0.5rem;
   }
   .hist-section {
     display: flex;
     flex-direction: column;
     gap: 0.65rem;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--line);
-    border-radius: 20px;
+    background: #000;
+    border: 2px solid var(--line);
+    border-radius: 0;
     padding: 1rem;
   }
   .hist-title {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-family: var(--mono);
   }
-  .hist-title .name { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
-  .hist-title .streak { font-size: 0.68rem; letter-spacing: 0.02em; color: var(--dim); }
+  .hist-title .name { font-size: 0.95rem; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: 0.03em; }
+  .hist-title .streak { font-size: 0.68rem; letter-spacing: 0.02em; color: var(--dim); text-transform: uppercase; }
   .hist-stats { display: flex; gap: 0.5rem; }
   .hist-stat {
     flex: 1 1 0;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--line);
-    border-radius: 14px;
+    background: #000;
+    border: 1px solid var(--line-soft);
+    border-radius: 0;
     padding: 0.55rem 0.3rem;
     text-align: center;
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+    font-family: var(--mono);
   }
   .hist-stat .n { font-size: 1.2rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); display: block; line-height: 1.2; }
-  .hist-stat .l { font-size: 0.56rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dim); }
-  .heat-grid {
-    display: grid;
-    grid-auto-flow: column;
-    grid-template-rows: repeat(7, 1fr);
-    gap: 3px;
+  .hist-stat .l { font-size: 0.56rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; color: var(--dim); }
+  .hist-nav {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
     justify-content: center;
+    gap: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid var(--line-soft);
+  }
+  .hist-nav .hist-month-label {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink);
+    min-width: 10ch;
+    text-align: center;
+  }
+  .cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
     padding-top: 0.2rem;
   }
-  .heat-cell { width: 11px; height: 11px; border-radius: 3px; background: var(--line); }
-  .heat-cell.empty { background: transparent; }
-  .heat-cell.gym-1 { background: rgba(217,169,76,0.4); }
-  .heat-cell.gym-2 { background: var(--gold); }
-  .heat-cell.breath-1 { background: rgba(123,167,194,0.4); }
-  .heat-cell.breath-2 { background: var(--sky); }
+  .cal-weekdays span {
+    font-size: 0.56rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--dim);
+    text-align: center;
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  .cal-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+    background: var(--line-soft);
+    color: var(--dim);
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .cal-cell.empty { background: transparent; }
+  .cal-cell.today { box-shadow: inset 0 0 0 1px var(--ink); }
+  .cal-cell.gym-1 { background: #5a5a00; color: var(--ink); }
+  .cal-cell.gym-2 { background: var(--yellow); color: #000; }
+  .cal-cell.breath-1 { background: #00005a; color: var(--ink); }
+  .cal-cell.breath-2 { background: var(--blue); color: #fff; }
 
   /* ---- Manage panel: bottom sheet ---- */
   #panel {
     position: fixed;
     left: 0; right: 0; bottom: 0; top: 8%;
-    background: #0b0d12;
+    background: #000;
     display: flex;
     flex-direction: column;
     padding: 0.65rem 1.1rem calc(env(safe-area-inset-bottom) + 1rem);
     text-align: left;
-    font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
-    z-index: 10;
-    border-radius: 26px 26px 0 0;
-    box-shadow: 0 -16px 44px rgba(0,0,0,0.5);
+    font-family: var(--mono);
+    z-index: 300;
+    border-top: 4px solid var(--line);
+    border-radius: 0;
     transform: translateY(105%);
-    transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+    transition: transform 0.28s ease-out;
     pointer-events: none;
   }
   #panel.open { transform: translateY(0); pointer-events: auto; }
@@ -491,20 +568,20 @@
     flex: 0 0 auto;
     width: 2.4rem;
     height: 4px;
-    border-radius: 2px;
-    background: var(--line);
+    border-radius: 0;
+    background: var(--line-soft);
     margin: 0.3rem auto 0.5rem;
   }
-  #panel h2 { font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); margin: 1.1rem 0 0.5rem; font-weight: 600; }
+  #panel h2 { font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); margin: 1.1rem 0 0.5rem; font-weight: 700; }
   #panel .scroll { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-  #panel .item { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.55rem 0; border-bottom: 1px solid #171c26; font-size: 0.82rem; line-height: 1.4; color: #cfd6e2; }
+  #panel .item { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.55rem 0; border-bottom: 1px solid var(--line-soft); font-size: 0.82rem; line-height: 1.4; color: var(--ink); }
   #panel .item span { flex: 1 1 auto; }
   #panel .item .id { flex: 0 0 auto; color: var(--dim); font-variant-numeric: tabular-nums; }
-  #panel .item button { flex: 0 0 auto; font-size: 0.6rem; padding: 0.3rem 0.55rem; letter-spacing: 0.08em; }
-  #panel .empty { color: var(--dim); font-size: 0.82rem; padding: 0.5rem 0; }
-  #export { width: 100%; height: 5.5rem; background: #12161f; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 0.6rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; -webkit-user-select: text; user-select: text; }
+  #panel .item button { flex: 0 0 auto; font-size: 0.6rem; padding: 0.3rem 0.55rem; letter-spacing: 0.06em; }
+  #panel .empty { color: var(--dim); font-size: 0.82rem; padding: 0.5rem 0; text-transform: uppercase; }
+  #export { width: 100%; height: 5.5rem; background: #000; color: var(--ink); border: 2px solid var(--line-soft); border-radius: 0; padding: 0.6rem; font-family: var(--mono); font-size: 0.75rem; -webkit-user-select: text; user-select: text; }
   .panel-actions { display: flex; gap: 0.5rem; padding-top: 0.75rem; }
-  #copied { color: var(--gold); font-size: 0.72rem; }
+  #copied { color: var(--yellow); font-size: 0.72rem; text-transform: uppercase; font-weight: 700; }
 </style>
 </head>
 <body>
@@ -614,6 +691,12 @@
 
   <header class="gym-header">Your history</header>
 
+  <div class="hist-nav">
+    <button id="hist-prev" class="quiet">‹ Prev</button>
+    <span class="hist-month-label" id="hist-month-label">&nbsp;</span>
+    <button id="hist-next" class="quiet">Next ›</button>
+  </div>
+
   <main class="hist-main">
     <div class="hist-section">
       <div class="hist-title"><span class="name">Gym</span><span class="streak" id="hist-gym-streak"></span></div>
@@ -622,7 +705,8 @@
         <div class="hist-stat"><span class="n" id="hist-gym-total">0</span><span class="l">Sessions</span></div>
         <div class="hist-stat"><span class="n" id="hist-gym-minutes">0</span><span class="l">Minutes</span></div>
       </div>
-      <div class="heat-grid" id="hist-gym-grid"></div>
+      <div class="cal-weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+      <div class="cal-grid" id="hist-gym-grid"></div>
     </div>
 
     <div class="hist-section">
@@ -632,7 +716,8 @@
         <div class="hist-stat"><span class="n" id="hist-breath-total">0</span><span class="l">Sessions</span></div>
         <div class="hist-stat"><span class="n" id="hist-breath-minutes">0</span><span class="l">Minutes</span></div>
       </div>
-      <div class="heat-grid" id="hist-breath-grid"></div>
+      <div class="cal-weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+      <div class="cal-grid" id="hist-breath-grid"></div>
     </div>
   </main>
 
@@ -951,30 +1036,47 @@ const History = (() => {
     );
   }
 
-  const WEEKS = 12; // ~3 months, enough to see a pattern without crowding a phone screen
+  // The month currently shown in the calendar. Starts on today's month;
+  // Prev/Next below only move within it, never past the current month.
+  const viewDate = new Date();
+  viewDate.setDate(1);
 
-  function renderGrid(gridEl, bucket, levelClass) {
+  function isCurrentMonth() {
+    const now = new Date();
+    return viewDate.getFullYear() === now.getFullYear() && viewDate.getMonth() === now.getMonth();
+  }
+
+  function renderNav() {
+    document.getElementById('hist-month-label').textContent =
+      viewDate.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+    document.getElementById('hist-next').disabled = isCurrentMonth();
+  }
+
+  function renderCalendar(gridEl, bucket, levelClass) {
     gridEl.innerHTML = '';
-    const days = WEEKS * 7;
-    const end = new Date();
-    const start = new Date(end); start.setDate(end.getDate() - (days - 1));
-    const leadIn = start.getDay(); // pad so every column starts on Sunday
+    const year = viewDate.getFullYear();
+    const month = viewDate.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const leadIn = new Date(year, month, 1).getDay(); // pad so day 1 lands on its real weekday
+    const today = dayKey();
     for (let i = 0; i < leadIn; i++) {
       const pad = document.createElement('div');
-      pad.className = 'heat-cell empty';
+      pad.className = 'cal-cell empty';
       gridEl.appendChild(pad);
     }
-    for (let i = 0; i < days; i++) {
-      const d = new Date(start); d.setDate(start.getDate() + i);
-      const entry = bucket[dayKey(d)];
+    for (let d = 1; d <= daysInMonth; d++) {
+      const key = dayKey(new Date(year, month, d));
+      const entry = bucket[key];
       const cell = document.createElement('div');
-      cell.className = 'heat-cell';
+      cell.className = 'cal-cell';
+      if (key === today) cell.classList.add('today');
       if (entry) {
         cell.classList.add(levelClass + (entry.sessions > 1 || entry.minutes >= 10 ? '-2' : '-1'));
-        cell.title = dayKey(d) + ' · ' + entry.sessions + (entry.sessions === 1 ? ' session' : ' sessions');
+        cell.title = key + ' · ' + entry.sessions + (entry.sessions === 1 ? ' session' : ' sessions');
       } else {
-        cell.title = dayKey(d);
+        cell.title = key;
       }
+      cell.textContent = d;
       gridEl.appendChild(cell);
     }
   }
@@ -992,11 +1094,22 @@ const History = (() => {
 
   function render() {
     load();
+    renderNav();
     renderStats('gym', data.gym);
     renderStats('breath', data.breathing);
-    renderGrid(document.getElementById('hist-gym-grid'), data.gym, 'gym');
-    renderGrid(document.getElementById('hist-breath-grid'), data.breathing, 'breath');
+    renderCalendar(document.getElementById('hist-gym-grid'), data.gym, 'gym');
+    renderCalendar(document.getElementById('hist-breath-grid'), data.breathing, 'breath');
   }
+
+  document.getElementById('hist-prev').addEventListener('click', () => {
+    viewDate.setMonth(viewDate.getMonth() - 1);
+    render();
+  });
+  document.getElementById('hist-next').addEventListener('click', () => {
+    if (isCurrentMonth()) return;
+    viewDate.setMonth(viewDate.getMonth() + 1);
+    render();
+  });
 
   return { logGym, logBreathing, render };
 })();
@@ -1015,6 +1128,7 @@ const Gym = (() => {
   let pausedElapsed = 0;    // seconds already spent on the current movement when paused
   let tickId = null;
   let wakeLock = null;
+  let warnedSecond = null;  // last whole second we already played the 3-2-1 warning tick for
 
   const els = {};
   function cacheEls() {
@@ -1050,6 +1164,25 @@ const Gym = (() => {
     if (navigator.vibrate) navigator.vibrate(150);
   }
 
+  // Short, quiet tick for the 3-2-1 warning before a movement ends, so you
+  // know to get ready for the next one without having to watch the timer.
+  function warnTick() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.frequency.value = 440;
+      gain.gain.value = 0.0001;
+      osc.connect(gain); gain.connect(ctx.destination);
+      const t = ctx.currentTime;
+      gain.gain.exponentialRampToValueAtTime(0.15, t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+      osc.start(t); osc.stop(t + 0.15);
+      osc.onended = () => ctx.close();
+    } catch (e) { /* no audio available, silently skip */ }
+    if (navigator.vibrate) navigator.vibrate(40);
+  }
+
   async function acquireWakeLock() {
     try { wakeLock = await navigator.wakeLock.request('screen'); } catch (e) { /* not supported, fine */ }
   }
@@ -1079,11 +1212,17 @@ const Gym = (() => {
 
   function renderTick(remaining) {
     const m = movements[index];
-    els['gym-timer'].textContent = Math.max(0, Math.ceil(remaining));
+    const secLeft = Math.max(0, Math.ceil(remaining));
+    els['gym-timer'].textContent = secLeft;
     els['gym-timer'].classList.toggle('urgent', remaining <= 5);
     const frac = Math.min(1, Math.max(0, 1 - remaining / m.seconds));
     const fill = document.querySelectorAll('#gym-segments .seg')[index];
     if (fill) fill.querySelector('.fill').style.width = (frac * 100) + '%';
+
+    if (secLeft >= 1 && secLeft <= 3 && secLeft !== warnedSecond) {
+      warnedSecond = secLeft;
+      warnTick();
+    }
   }
 
   function tick() {
@@ -1120,6 +1259,7 @@ const Gym = (() => {
     index = Math.max(0, Math.min(movements.length - 1, i));
     pausedElapsed = 0;
     running = false;
+    warnedSecond = null;
     els['gym-done'].classList.remove('open');
     renderMovement();
     if (autorun) start();
