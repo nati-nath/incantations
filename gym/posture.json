@@ -1,0 +1,96 @@
+{
+  "_readme": "Posture routine: 13 steps, 9 minutes, played back to back. Built from two Jeremy Ethier (Built With Science) videos: 'The PERFECT 10 Minute Daily Posture Routine (FIX YOUR SIT!)' (youtube.com/watch?v=RqcOCBb4arc) and 'PERFECT Posture Routine To Unlock Your Sh*t (10 Min/Day)' (youtube.com/watch?v=XWQvmh_INTQ). Timings follow the second video's on-screen table (1 minute, or 30 seconds each side); the first video's rep-based moves are fitted to the same blocks. Mobility first, strengthening after, glute bridge last, as both videos say. He recommends doing it at least twice a day. 'cue' is shown under the timer.",
+  "movements": [
+    {
+      "id": 1,
+      "name": "Over-and-backs",
+      "seconds": 60,
+      "image": "gym/photos/posture/over-and-backs.webp",
+      "cue": "Band or towel, wide grip, arms straight. Sweep it overhead and behind you, then back. Brace so your lower back does not arch."
+    },
+    {
+      "id": 2,
+      "name": "Cobra",
+      "seconds": 60,
+      "image": "gym/photos/posture/cobra.webp",
+      "cue": "Face down, hands under your shoulders. Lift your chest with your back, not your arms. Pause and breathe at the top. 5 to 10 slow reps."
+    },
+    {
+      "id": 3,
+      "name": "Stand and reach · left",
+      "seconds": 30,
+      "image": "gym/photos/posture/stand-and-reach.webp",
+      "cue": "Right hand on your hip. Reach your left arm up and diagonally back. Hold 5 to 10 seconds, release, repeat."
+    },
+    {
+      "id": 4,
+      "name": "Stand and reach · right",
+      "seconds": 30,
+      "image": "gym/photos/posture/stand-and-reach.webp",
+      "cue": "Left hand on your hip. Reach your right arm up and diagonally back. Do extra reps on the side that feels tighter."
+    },
+    {
+      "id": 5,
+      "name": "Back rotations · left",
+      "seconds": 30,
+      "image": "gym/photos/posture/quadruped-rotations.webp",
+      "cue": "On all fours, left hand behind your neck. Thread the elbow under, then rotate it up to the ceiling. Eyes follow the elbow."
+    },
+    {
+      "id": 6,
+      "name": "Back rotations · right",
+      "seconds": 30,
+      "image": "gym/photos/posture/quadruped-rotations.webp",
+      "cue": "Right hand behind your neck. Thread the elbow under, then rotate up as far as you can. Pause briefly at the top."
+    },
+    {
+      "id": 7,
+      "name": "Wall slides with chin nod",
+      "seconds": 60,
+      "image": "gym/photos/posture/wall-slides.webp",
+      "cue": "Back and head flat on the wall. Slide your arms up and down. As they rise, tuck your chin into a double chin."
+    },
+    {
+      "id": 8,
+      "name": "Prone arm circles",
+      "seconds": 60,
+      "image": "gym/photos/posture/prone-arm-circles.webp",
+      "cue": "Face down, forehead to the floor. Lift straight arms into a Y and circle them slowly down to your lower back, then back to the Y."
+    },
+    {
+      "id": 9,
+      "name": "Couch stretch · left",
+      "seconds": 30,
+      "image": "gym/photos/posture/couch-stretch.webp",
+      "cue": "Left foot up on a couch or wall, right shin vertical. Squeeze your glutes and tuck your pelvis. Aim for 4 to 5 out of 10."
+    },
+    {
+      "id": 10,
+      "name": "Couch stretch · right",
+      "seconds": 30,
+      "image": "gym/photos/posture/couch-stretch.webp",
+      "cue": "Right foot up behind you. Brace your core, keep the pelvis level. Lean forward to ease off, sit back to go deeper."
+    },
+    {
+      "id": 11,
+      "name": "Pigeon stretch · left",
+      "seconds": 30,
+      "image": "gym/photos/posture/pigeon.webp",
+      "cue": "Left leg across a couch or the floor in front, right leg long behind. Brace, then hinge your chest forward over the front leg."
+    },
+    {
+      "id": 12,
+      "name": "Pigeon stretch · right",
+      "seconds": 30,
+      "image": "gym/photos/posture/pigeon.webp",
+      "cue": "Right leg in front. Feel it in the outer hip. Spend longer on the side that feels tighter."
+    },
+    {
+      "id": 13,
+      "name": "Glute bridge",
+      "seconds": 60,
+      "image": "gym/photos/posture/glute-bridge.webp",
+      "cue": "On your back, knees bent. Tuck your pelvis, then drive your hips up with your glutes. Hold 5 seconds at the top. Do not arch."
+    }
+  ]
+}

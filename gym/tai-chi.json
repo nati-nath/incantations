@@ -1,0 +1,20 @@
+{
+  "_readme": "Tai chi routine: 15 movements, 1 minute each, played back to back. Order is the order they run in. 'image' is a looping animated line figure of the movement (see make-illustrations.py) — swap in real footage whenever you're ready, and just replace the file each name points to.",
+  "movements": [
+    { "id": 1,  "name": "Lymphatic hops",        "seconds": 60, "image": "gym/photos/tai-chi/01-lymphatic-hops.webp" },
+    { "id": 2,  "name": "Body waves",            "seconds": 60, "image": "gym/photos/tai-chi/02-body-waves.webp" },
+    { "id": 3,  "name": "Arm swings",            "seconds": 60, "image": "gym/photos/tai-chi/03-arm-swings.webp" },
+    { "id": 4,  "name": "Trunk twists",          "seconds": 60, "image": "gym/photos/tai-chi/04-trunk-twists.webp" },
+    { "id": 5,  "name": "Forward arm circles",   "seconds": 60, "image": "gym/photos/tai-chi/05-forward-arm-circles.webp" },
+    { "id": 6,  "name": "Squats",                "seconds": 60, "image": "gym/photos/tai-chi/06-squats.webp" },
+    { "id": 7,  "name": "Backward arm swings",   "seconds": 60, "image": "gym/photos/tai-chi/07-backward-arm-swings.webp" },
+    { "id": 8,  "name": "Dead arms",             "seconds": 60, "image": "gym/photos/tai-chi/08-dead-arms.webp" },
+    { "id": 9,  "name": "Golf swings",           "seconds": 60, "image": "gym/photos/tai-chi/09-golf-swings.webp" },
+    { "id": 10, "name": "Marches",               "seconds": 60, "image": "gym/photos/tai-chi/10-marches.webp" },
+    { "id": 11, "name": "Tiptoe arm swings",     "seconds": 60, "image": "gym/photos/tai-chi/11-tiptoe-arm-swings.webp" },
+    { "id": 12, "name": "Twist the waist",       "seconds": 60, "image": "gym/photos/tai-chi/12-twist-the-waist.webp" },
+    { "id": 13, "name": "Wide arm step backs",   "seconds": 60, "image": "gym/photos/tai-chi/13-wide-arm-step-backs.webp" },
+    { "id": 14, "name": "Back step wave lunges", "seconds": 60, "image": "gym/photos/tai-chi/14-back-step-wave-lunges.webp" },
+    { "id": 15, "name": "Ballet squats",         "seconds": 60, "image": "gym/photos/tai-chi/15-ballet-squats.webp" }
+  ]
+}

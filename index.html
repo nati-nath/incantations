@@ -212,10 +212,13 @@
     overflow: hidden;
     background: #000;
   }
+  /* contain, kept clear of the name badge: the floor exercises happen right at the
+     bottom edge of the drawing, which cover-cropping or the badge would hide */
   .gym-photo-wrap img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    padding-bottom: 3.3rem;
     display: block;
     filter: grayscale(1) contrast(1.15);
   }
@@ -249,6 +252,31 @@
     text-transform: uppercase;
     text-align: center;
   }
+  .gym-routines {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+  .gym-routines button {
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    color: var(--dim);
+    border: 2px solid var(--line-soft);
+    padding: 0.45rem 0.9rem;
+    margin: 0 0.2rem;
+  }
+  .gym-routines button.active { color: #000; border-color: var(--yellow); background: var(--yellow); }
+  .gym-cue {
+    flex: 0 0 auto;
+    margin: 0;
+    max-width: 22rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: var(--ink);
+    text-align: left;
+  }
+  .gym-cue:empty { display: none; }
   .gym-segments {
     flex: 0 0 auto;
     display: flex;
@@ -630,7 +658,8 @@
 
 <section id="tab-gym" class="tab-panel" style="position: relative;">
 
-  <header class="gym-header" id="gym-progress-label">Move 1 of 15</header>
+  <nav class="gym-routines" id="gym-routines"></nav>
+  <header class="gym-header" id="gym-progress-label">&nbsp;</header>
 
   <main class="gym-main">
     <div class="gym-photo-wrap">
@@ -638,6 +667,7 @@
       <div class="gym-timer" id="gym-timer">60</div>
       <div class="gym-name-badge" id="gym-name"></div>
     </div>
+    <p class="gym-cue" id="gym-cue"></p>
     <div class="gym-segments" id="gym-segments"></div>
     <p class="gym-next" id="gym-next">&nbsp;</p>
   </main>
@@ -653,7 +683,7 @@
 
   <div class="gym-done" id="gym-done">
     <p>Workout complete</p>
-    <p id="gym-done-summary">15 movements &middot; 15 minutes</p>
+    <p id="gym-done-summary">&nbsp;</p>
     <button id="gym-done-restart">Do it again</button>
   </div>
 
@@ -1115,11 +1145,19 @@ const History = (() => {
 })();
 
 // ===========================================================================
-// GYM. 15 movements, a minute each, back to back. The countdown is driven off
-// a start timestamp rather than a tick counter, so it stays accurate even if
-// the tab was backgrounded for a moment.
+// GYM. A routine of timed movements, back to back: tai chi or posture, picked
+// at the top and remembered on the device. The countdown is driven off a start
+// timestamp rather than a tick counter, so it stays accurate even if the tab
+// was backgrounded for a moment.
 // ===========================================================================
 const Gym = (() => {
+  const ROUTINES = [
+    { key: 'tai-chi', label: 'Tai chi', file: 'gym/tai-chi.json' },
+    { key: 'posture', label: 'Posture', file: 'gym/posture.json' },
+  ];
+  const ROUTINE_KEY = 'app.gym.routine.v1';
+  const routineCache = {};  // key -> movements, so switching back and forth doesn't refetch
+  let routine = null;
   let movements = [];
   let loaded = false;
   let index = 0;
@@ -1132,7 +1170,7 @@ const Gym = (() => {
 
   const els = {};
   function cacheEls() {
-    ['gym-progress-label', 'gym-photo', 'gym-timer', 'gym-name', 'gym-segments', 'gym-next',
+    ['gym-routines', 'gym-progress-label', 'gym-photo', 'gym-timer', 'gym-name', 'gym-cue', 'gym-segments', 'gym-next',
      'gym-back', 'gym-startpause', 'gym-skip', 'gym-restart', 'gym-done', 'gym-done-summary', 'gym-done-restart']
       .forEach(id => { els[id] = document.getElementById(id); });
   }
@@ -1147,39 +1185,45 @@ const Gym = (() => {
     });
   }
 
-  function beep() {
+  // One shared audio context, created and resumed inside the Start tap. iOS only
+  // lets a page make sound from a context unlocked by a tap. A fresh context made
+  // later from the timer stays suspended, so the old beeps were silent on the phone.
+  // 'playback' (iOS 17+) also stops the ring/silent switch muting the beeps.
+  let audioCtx = null;
+  function unlockAudio() {
     try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.frequency.value = 880;
-      gain.gain.value = 0.0001;
-      osc.connect(gain); gain.connect(ctx.destination);
-      const t = ctx.currentTime;
-      gain.gain.exponentialRampToValueAtTime(0.2, t + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
-      osc.start(t); osc.stop(t + 0.3);
-      osc.onended = () => ctx.close();
+      if (navigator.audioSession) navigator.audioSession.type = 'playback';
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state !== 'running') audioCtx.resume();
     } catch (e) { /* no audio available, silently skip */ }
+  }
+
+  function tone(freq, peak, length) {
+    try {
+      if (!audioCtx) return;
+      if (audioCtx.state !== 'running') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.frequency.value = freq;
+      gain.gain.value = 0.0001;
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      const t = audioCtx.currentTime;
+      gain.gain.exponentialRampToValueAtTime(peak, t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + length);
+      osc.start(t); osc.stop(t + length + 0.05);
+    } catch (e) { /* no audio available, silently skip */ }
+  }
+
+  // Long, high beep: change position now.
+  function beep() {
+    tone(1320, 0.5, 0.5);
     if (navigator.vibrate) navigator.vibrate(150);
   }
 
-  // Short, quiet tick for the 3-2-1 warning before a movement ends, so you
-  // know to get ready for the next one without having to watch the timer.
+  // Short beep at 3, 2 and 1 seconds left, so you know to get ready for the
+  // next move without having to watch the timer.
   function warnTick() {
-    try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.frequency.value = 440;
-      gain.gain.value = 0.0001;
-      osc.connect(gain); gain.connect(ctx.destination);
-      const t = ctx.currentTime;
-      gain.gain.exponentialRampToValueAtTime(0.15, t + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
-      osc.start(t); osc.stop(t + 0.15);
-      osc.onended = () => ctx.close();
-    } catch (e) { /* no audio available, silently skip */ }
+    tone(880, 0.35, 0.15);
     if (navigator.vibrate) navigator.vibrate(40);
   }
 
@@ -1196,6 +1240,7 @@ const Gym = (() => {
     els['gym-photo'].src = m.image;
     els['gym-photo'].alt = m.name;
     els['gym-name'].textContent = m.name;
+    els['gym-cue'].textContent = m.cue || '';
     const next = movements[index + 1];
     els['gym-next'].textContent = next ? 'Next: ' + next.name : 'Last one';
 
@@ -1239,6 +1284,7 @@ const Gym = (() => {
 
   function start() {
     if (running) return;
+    unlockAudio();
     running = true;
     startTs = Date.now();
     els['gym-startpause'].textContent = 'Pause';
@@ -1284,6 +1330,40 @@ const Gym = (() => {
     });
   }
 
+  function renderRoutines() {
+    els['gym-routines'].innerHTML = '';
+    ROUTINES.forEach(r => {
+      const btn = document.createElement('button');
+      btn.textContent = r.label;
+      btn.className = r === routine ? 'active' : '';
+      btn.addEventListener('click', () => { if (r !== routine) selectRoutine(r); });
+      els['gym-routines'].appendChild(btn);
+    });
+  }
+
+  // Switching routine stops whatever was running and starts the new one from the top.
+  function selectRoutine(r) {
+    if (running) pause();
+    releaseWakeLock();
+    routine = r;
+    try { localStorage.setItem(ROUTINE_KEY, r.key); } catch (e) { /* private mode */ }
+    renderRoutines();
+    const show = list => {
+      if (routine !== r) return;  // another tap landed while this one was loading
+      movements = list;
+      buildSegments();
+      goTo(0, false);
+    };
+    if (routineCache[r.key]) { show(routineCache[r.key]); return; }
+    fetch(r.file)
+      .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+      .then(data => { routineCache[r.key] = data.movements; show(data.movements); })
+      .catch(err => {
+        els['gym-name'].textContent = 'Could not load the movements.';
+        els['gym-next'].textContent = err.message;
+      });
+  }
+
   function wireControls() {
     els['gym-startpause'].addEventListener('click', () => { running ? pause() : start(); });
     els['gym-skip'].addEventListener('click', () => {
@@ -1303,17 +1383,8 @@ const Gym = (() => {
     loaded = true;
     cacheEls();
     wireControls();
-    fetch('gym/movements.json')
-      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(data => {
-        movements = data.movements;
-        buildSegments();
-        goTo(0, false);
-      })
-      .catch(err => {
-        els['gym-name'].textContent = 'Could not load the movements.';
-        els['gym-next'].textContent = err.message;
-      });
+    const saved = localStorage.getItem(ROUTINE_KEY);
+    selectRoutine(ROUTINES.find(r => r.key === saved) || ROUTINES[0]);
   }
 
   return { boot: boot };
