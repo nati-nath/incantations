@@ -11,7 +11,9 @@ normalised 0-1 grid (x: left->right, y: top->bottom).
 Each movement is a short list of key poses. The figure eases from one to the next, pauses
 briefly on each, and loops, saved as an animated WebP (photos/tai-chi/, photos/posture/).
 Most loop there and back (A-B-A); `loop=True` runs the keys in a circle instead (A-B-C-D-A),
-which is how alternating-side moves show both sides.
+which is how alternating-side moves show both sides. A continuous move like an arm circle has
+no key poses to pause on, so it gives `path`: a function from 0-1 round the cycle to a pose,
+played at an even speed.
 
 Rerun this if you want to change a pose; the JSON image paths don't need to change.
 """
@@ -157,10 +159,23 @@ TRUNK_TWIST = pose(
     l_shoulder=(0.44, 0.22), r_shoulder=(0.58, 0.25),
     l_hand=(0.74, 0.36), r_hand=(0.84, 0.42),
 )
-# arms sweep down -> out -> overhead and back, mid-circle shown as arms out to the sides
-CIRCLE_DOWN = pose(l_hand=(0.33, 0.48), r_hand=(0.67, 0.48))
-CIRCLE_OUT = pose(l_hand=(0.12, 0.28), r_hand=(0.88, 0.28))
-CIRCLE_UP = pose(l_hand=(0.36, -0.02), r_hand=(0.64, -0.02))
+ARM = 0.25 * H  # shoulder-to-hand length in pixels, as in BASE
+
+
+def arm_circles(direction):
+    """Both straight arms circling the whole way round the shoulder, mirror images of each other.
+    Forward (+1): open out and up the sides, cross overhead, then sweep down in front of the
+    body. Backward (-1) is the same circle the other way. The inward half is drawn
+    shorter, since an arm reaching across the front of the body is foreshortened."""
+    def at(t):
+        a = -direction * 2 * math.pi * t  # 0 = hanging straight down, pi/2 = across the body
+        dx, dy = math.sin(a) * ARM, math.cos(a) * ARM
+        if dx > 0:
+            dx *= 0.5
+        sl, sr = BASE['l_shoulder'], BASE['r_shoulder']
+        return pose(l_hand=(sl[0] + dx / W, sl[1] + dy / H), r_hand=(sr[0] - dx / W, sr[1] + dy / H))
+    return at
+
 # deep knee bend, arms hanging straight for balance, feet wide
 SQUAT = shift(pose(
     pelvis=(0.5, 0.68),
@@ -173,12 +188,14 @@ DEAD_ARMS_IN = pose(l_hand=(0.58, 0.26), r_hand=(0.42, 0.28))
 DEAD_ARMS_OUT = pose(l_hand=(0.16, 0.42), r_hand=(0.84, 0.42))
 # one arm raised high on the diagonal, the other swept low across the body
 GOLF = pose(pelvis=(0.46, 0.57), l_hand=(0.30, 0.56), r_hand=(0.80, -0.03))
-# right knee driven up high, opposite arm forward — mid-march. Hands stay on their own
-# side (never crossing the centre line) so the raised knee doesn't get lost in an X of limbs.
-MARCH = pose(
-    l_hand=(0.30, 0.28), r_hand=(0.70, 0.55),
-    l_knee=(0.44, 0.77), l_foot=(0.42, 0.96),
-    r_knee=(0.60, 0.42), r_foot=(0.58, 0.50),
+# marches: the right knee rises as the arms open wide, then the arms close round the raised knee
+MARCH_OPEN = pose(
+    l_hand=(0.10, 0.26), r_hand=(0.90, 0.26),
+    r_knee=(0.60, 0.58), r_foot=(0.59, 0.80),
+)
+KNEE_HUG = pose(
+    l_hand=(0.52, 0.45), r_hand=(0.67, 0.45),
+    r_knee=(0.59, 0.42), r_foot=(0.58, 0.64),
 )
 # arms swung low and back, then up on the toes with both arms overhead
 TIPTOE_DOWN = pose(l_hand=(0.30, 0.52), r_hand=(0.70, 0.52))
@@ -189,44 +206,64 @@ TWIST_WAIST = pose(
     l_foot=(0.38, 0.96), r_foot=(0.62, 0.96),
     l_hand=(0.36, 0.52), r_hand=(0.90, 0.34),
 )
-# arms wide (T shape), one leg stepped back into a small lunge
-WIDE_ARMS = pose(l_hand=(0.06, 0.28), r_hand=(0.94, 0.28))
-WIDE_STEP = pose(
-    l_hand=(0.06, 0.28), r_hand=(0.94, 0.28),
-    l_knee=(0.45, 0.75), l_foot=(0.46, 0.88), r_knee=(0.62, 0.85), r_foot=(0.72, 0.98),
-)
+# wide arm step backs, drawn side-on (facing left) since a step backward can't be seen from the
+# front: arms reaching straight out in front, then one foot steps back into a small lunge as
+# the arms open out wide. An arm opened level to the side points at the viewer and would vanish,
+# so the open arms are drawn just past the side, short and pointing back.
+def side(head, neck, pelvis, hands, knees, feet):
+    return dict(head=head, neck=neck, pelvis=pelvis,
+                l_shoulder=neck, r_shoulder=(neck[0] + 0.01, neck[1]),
+                l_hand=hands[0], r_hand=hands[1], l_knee=knees[0], r_knee=knees[1],
+                l_foot=feet[0], r_foot=feet[1])
+
+
+ARMS_FRONT = side((0.47, 0.11), (0.50, 0.215), (0.50, 0.57), ((0.21, 0.23), (0.22, 0.24)),
+                  ((0.49, 0.78), (0.51, 0.78)), ((0.48, 0.96), (0.52, 0.96)))
+STEP_BACK = side((0.48, 0.17), (0.51, 0.275), (0.52, 0.63), ((0.66, 0.30), (0.68, 0.31)),
+                 ((0.40, 0.79), (0.68, 0.86)), ((0.41, 0.96), (0.82, 0.955)))
+STEP_BACK_OTHER = {**STEP_BACK, 'l_knee': STEP_BACK['r_knee'], 'l_foot': STEP_BACK['r_foot'],
+                   'r_knee': STEP_BACK['l_knee'], 'r_foot': STEP_BACK['l_foot']}
+
 # lunge stance, both arms reaching up and over to one side
 WAVE_LUNGE = pose(
     l_hand=(0.24, 0.00), r_hand=(0.56, -0.08),
     l_knee=(0.42, 0.74), l_foot=(0.42, 0.88), r_knee=(0.68, 0.86), r_foot=(0.80, 0.98),
 )
-# wide plie stance, arms raised overhead and well apart
+# wide plie stance: tall with the arms overhead, then down into the squat as the arms float
+# down to a low curve in front of the hips
 BALLET_DOWN = shift(pose(
     pelvis=(0.5, 0.66),
-    l_hand=(0.32, -0.04), r_hand=(0.68, -0.04),
+    l_hand=(0.42, 0.50), r_hand=(0.58, 0.50),
     l_knee=(0.32, 0.79), l_foot=(0.24, 0.96), r_knee=(0.68, 0.79), r_foot=(0.76, 0.96),
 ), 0.08, UPPER)
 BALLET_UP = pose(
     l_hand=(0.32, -0.04), r_hand=(0.68, -0.04),
     l_knee=(0.34, 0.77), l_foot=(0.24, 0.96), r_knee=(0.66, 0.77), r_foot=(0.76, 0.96),
 )
+BALLET_MID = shift(pose(
+    pelvis=(0.5, 0.615),
+    l_hand=(0.12, 0.24), r_hand=(0.88, 0.24),
+    l_knee=(0.33, 0.78), l_foot=(0.24, 0.96), r_knee=(0.67, 0.78), r_foot=(0.76, 0.96),
+), 0.04, UPPER)
 
 TAI_CHI = {
     '01-lymphatic-hops': dict(keys=[HOP_LAND, HOP_AIR], move=0.25, hold=0.05),
     '02-body-waves': dict(keys=[WAVE_UP, WAVE_DOWN], move=1.0),
     '03-arm-swings': dict(keys=[ARM_SWING, mirror(ARM_SWING)], move=0.7),
     '04-trunk-twists': dict(keys=[TRUNK_TWIST, mirror(TRUNK_TWIST)], move=0.7),
-    '05-forward-arm-circles': dict(keys=[CIRCLE_DOWN, CIRCLE_OUT, CIRCLE_UP], move=0.45, hold=0.0),
+    '05-forward-arm-circles': dict(path=arm_circles(+1), seconds=2.4),
     '06-squats': dict(keys=[SQUAT_TOP, SQUAT], move=1.0),
-    '07-backward-arm-swings': dict(keys=[mirror(ARM_SWING), ARM_SWING], move=0.7),
+    '07-backward-arm-circles': dict(path=arm_circles(-1), seconds=2.4),
     '08-dead-arms': dict(keys=[DEAD_ARMS_IN, DEAD_ARMS_OUT], move=0.5, hold=0.05),
     '09-golf-swings': dict(keys=[GOLF, mirror(GOLF)], move=0.8),
-    '10-marches': dict(keys=[MARCH, mirror(MARCH)], move=0.5),
+    '10-marches': dict(keys=[STAND, MARCH_OPEN, KNEE_HUG, STAND, mirror(MARCH_OPEN), mirror(KNEE_HUG)],
+                       move=0.45, hold=0.1, loop=True),
     '11-tiptoe-arm-swings': dict(keys=[TIPTOE_DOWN, TIPTOE_UP], move=0.8),
     '12-twist-the-waist': dict(keys=[TWIST_WAIST, mirror(TWIST_WAIST)], move=0.7),
-    '13-wide-arm-step-backs': dict(keys=[WIDE_ARMS, WIDE_STEP, WIDE_ARMS, mirror(WIDE_STEP)], move=0.7, loop=True),
+    '13-wide-arm-step-backs': dict(keys=[ARMS_FRONT, STEP_BACK, ARMS_FRONT, STEP_BACK_OTHER], move=0.8, loop=True),
     '14-back-step-wave-lunges': dict(keys=[STAND, WAVE_LUNGE, STAND, mirror(WAVE_LUNGE)], move=0.8, loop=True),
-    '15-ballet-squats': dict(keys=[BALLET_UP, BALLET_DOWN], move=1.0),
+    # arms pass out through the sides between overhead and low, so they stay full length
+    '15-ballet-squats': dict(keys=[BALLET_UP, BALLET_MID, BALLET_DOWN, BALLET_MID], move=0.6, hold=0.1, loop=True),
 }
 
 
@@ -325,9 +362,18 @@ def animate(keys, move=0.8, hold=0.25, loop=False, **draw_opts):
     return frames, durations
 
 
+def animate_path(path, seconds, **draw_opts):
+    """Frames for one cycle of a continuous move, evenly spaced, no pauses."""
+    n = round(seconds * FPS)
+    return [draw_pose(path(i / n), **draw_opts) for i in range(n)], [round(1000 / FPS)] * n
+
+
 def write(folder, name, spec):
     spec = dict(spec)
-    frames, durations = animate(spec.pop('keys'), **spec)
+    if 'path' in spec:
+        frames, durations = animate_path(spec.pop('path'), **spec)
+    else:
+        frames, durations = animate(spec.pop('keys'), **spec)
     os.makedirs(folder, exist_ok=True)
     out = f"{folder}/{name}.webp"
     frames[0].save(out, save_all=True, append_images=frames[1:], duration=durations, loop=0,

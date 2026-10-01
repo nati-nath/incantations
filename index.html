@@ -356,17 +356,6 @@
     margin: 0.2rem;
   }
   .breath-header button.active { color: #000; border-color: var(--blue); background: var(--blue); }
-  .breath-desc {
-    flex: 0 0 auto;
-    font-family: var(--mono);
-    font-size: 0.76rem;
-    color: var(--dim);
-    text-align: center;
-    max-width: 30ch;
-    margin: 0.6rem auto 0;
-    line-height: 1.4;
-    text-transform: uppercase;
-  }
   .breath-main {
     flex: 1 1 auto;
     display: flex;
@@ -379,18 +368,22 @@
   .breath-circle-wrap {
     position: relative;
     width: 100%;
-    max-width: 16rem;
+    max-width: 22rem;
     aspect-ratio: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     flex: 1 1 auto;
     min-height: 0;
+    container-type: size;
   }
+  /* The wrap gets squashed shorter than it is wide on small screens, so a
+     percentage size would turn the circle into an oval. cqmin is the wrap's
+     shorter side, which keeps it a true circle whatever shape the wrap ends up. */
   .breath-circle {
     position: absolute;
-    width: 62%;
-    height: 62%;
+    width: 62cqmin;
+    height: 62cqmin;
     border-radius: 50%;
     background: var(--blue);
     border: 3px solid var(--line);
@@ -478,16 +471,21 @@
   #breath-startpause:active { background: #000; color: var(--blue); border-color: var(--blue); }
 
   /* ---- History ---- */
+  /* Top-aligned, not centred like other mains: once the calendars are taller than the screen,
+     centring pushes the first one above the scroll area where it can't be reached. */
   .hist-main {
     flex: 1 1 auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
     gap: 1.25rem;
     padding: 0.4rem 0 0.5rem;
   }
   .hist-section {
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     gap: 0.65rem;
@@ -535,6 +533,8 @@
     min-width: 10ch;
     text-align: center;
   }
+  /* capped and centred: at full screen width the square day cells made each calendar huge */
+  .cal-weekdays, .cal-grid { width: 100%; max-width: 13rem; margin: 0 auto; }
   .cal-weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -569,8 +569,10 @@
   }
   .cal-cell.empty { background: transparent; }
   .cal-cell.today { box-shadow: inset 0 0 0 1px var(--ink); }
-  .cal-cell.gym-1 { background: #5a5a00; color: var(--ink); }
-  .cal-cell.gym-2 { background: var(--yellow); color: #000; }
+  .cal-cell.taichi-1 { background: #5a5a00; color: var(--ink); }
+  .cal-cell.taichi-2 { background: var(--yellow); color: #000; }
+  .cal-cell.posture-1 { background: #5a0000; color: var(--ink); }
+  .cal-cell.posture-2 { background: var(--red); color: #fff; }
   .cal-cell.breath-1 { background: #00005a; color: var(--ink); }
   .cal-cell.breath-2 { background: var(--blue); color: #fff; }
 
@@ -692,7 +694,6 @@
 <section id="tab-breathing" class="tab-panel">
 
   <header class="breath-header" id="breath-presets"></header>
-  <p class="breath-desc" id="breath-desc">&nbsp;</p>
 
   <main class="breath-main">
     <div class="breath-circle-wrap">
@@ -729,20 +730,31 @@
 
   <main class="hist-main">
     <div class="hist-section">
-      <div class="hist-title"><span class="name">Gym</span><span class="streak" id="hist-gym-streak"></span></div>
+      <div class="hist-title"><span class="name">Tai chi</span><span class="streak" id="hist-taichi-streak"></span></div>
       <div class="hist-stats">
-        <div class="hist-stat"><span class="n" id="hist-gym-week">0</span><span class="l">This week</span></div>
-        <div class="hist-stat"><span class="n" id="hist-gym-total">0</span><span class="l">Sessions</span></div>
-        <div class="hist-stat"><span class="n" id="hist-gym-minutes">0</span><span class="l">Minutes</span></div>
+        <div class="hist-stat"><span class="n" id="hist-taichi-week">0</span><span class="l" id="hist-taichi-week-label">This week</span></div>
+        <div class="hist-stat"><span class="n" id="hist-taichi-total">0</span><span class="l">Sessions</span></div>
+        <div class="hist-stat"><span class="n" id="hist-taichi-minutes">0</span><span class="l">Minutes</span></div>
       </div>
       <div class="cal-weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
-      <div class="cal-grid" id="hist-gym-grid"></div>
+      <div class="cal-grid" id="hist-taichi-grid"></div>
+    </div>
+
+    <div class="hist-section">
+      <div class="hist-title"><span class="name">Posture</span><span class="streak" id="hist-posture-streak"></span></div>
+      <div class="hist-stats">
+        <div class="hist-stat"><span class="n" id="hist-posture-week">0</span><span class="l" id="hist-posture-week-label">This week</span></div>
+        <div class="hist-stat"><span class="n" id="hist-posture-total">0</span><span class="l">Sessions</span></div>
+        <div class="hist-stat"><span class="n" id="hist-posture-minutes">0</span><span class="l">Minutes</span></div>
+      </div>
+      <div class="cal-weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+      <div class="cal-grid" id="hist-posture-grid"></div>
     </div>
 
     <div class="hist-section">
       <div class="hist-title"><span class="name">Breathing</span><span class="streak" id="hist-breath-streak"></span></div>
       <div class="hist-stats">
-        <div class="hist-stat"><span class="n" id="hist-breath-week">0</span><span class="l">This week</span></div>
+        <div class="hist-stat"><span class="n" id="hist-breath-week">0</span><span class="l" id="hist-breath-week-label">This week</span></div>
         <div class="hist-stat"><span class="n" id="hist-breath-total">0</span><span class="l">Sessions</span></div>
         <div class="hist-stat"><span class="n" id="hist-breath-minutes">0</span><span class="l">Minutes</span></div>
       </div>
@@ -1024,11 +1036,33 @@ document.addEventListener('visibilitychange', () => {
 // ===========================================================================
 const History = (() => {
   const KEY = 'ritual.history.v1';
-  let data = { gym: {}, breathing: {} };
+  const empty = () => ({ 'tai-chi': {}, posture: {}, breathing: {} });
+  let data = empty();
 
   function load() {
-    try { data = Object.assign({ gym: {}, breathing: {} }, JSON.parse(localStorage.getItem(KEY)) || {}); }
-    catch (e) { data = { gym: {}, breathing: {} }; }
+    try { data = Object.assign(empty(), JSON.parse(localStorage.getItem(KEY)) || {}); }
+    catch (e) { data = empty(); }
+    if (data.gym) splitGym();
+  }
+
+  // Before tai chi and posture were tracked apart, both went into one 'gym'
+  // bucket. Only finished routines were ever logged, at their full length
+  // (tai chi 15 min, posture 9), so each day's sessions and minutes give back
+  // exactly how many of each it held. Anything that doesn't fit counts as tai chi.
+  function splitGym() {
+    Object.entries(data.gym).forEach(([day, v]) => {
+      let posture = (15 * v.sessions - v.minutes) / 6;
+      if (!Number.isInteger(posture) || posture < 0 || posture > v.sessions) posture = 0;
+      const add = (bucket, sessions, minutes) => {
+        if (!sessions) return;
+        const cur = bucket[day] || { sessions: 0, minutes: 0 };
+        bucket[day] = { sessions: cur.sessions + sessions, minutes: +(cur.minutes + minutes).toFixed(1) };
+      };
+      add(data.posture, posture, posture * 9);
+      add(data['tai-chi'], v.sessions - posture, v.minutes - posture * 9);
+    });
+    delete data.gym;
+    save();
   }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) { /* private mode */ } }
 
@@ -1040,7 +1074,7 @@ const History = (() => {
     bucket[k] = { sessions: cur.sessions + 1, minutes: +(cur.minutes + minutes).toFixed(1) };
   }
 
-  function logGym(minutes) { load(); bump(data.gym, minutes); save(); }
+  function logGym(routine, minutes) { load(); bump(data[routine] || (data[routine] = {}), minutes); save(); }
   function logBreathing(seconds) { load(); bump(data.breathing, seconds / 60); save(); }
 
   function streak(bucket) {
@@ -1059,8 +1093,10 @@ const History = (() => {
     return n;
   }
 
+  // Sessions and minutes for the month on screen only, so going back a month
+  // shows that month's recap.
   function totals(bucket) {
-    return Object.values(bucket).reduce(
+    return monthDays(bucket).map(k => bucket[k]).reduce(
       (acc, v) => ({ sessions: acc.sessions + v.sessions, minutes: acc.minutes + v.minutes }),
       { sessions: 0, minutes: 0 }
     );
@@ -1070,6 +1106,9 @@ const History = (() => {
   // Prev/Next below only move within it, never past the current month.
   const viewDate = new Date();
   viewDate.setDate(1);
+
+  // the bucket's day keys that fall in the month on screen
+  const monthDays = bucket => Object.keys(bucket).filter(k => k.startsWith(dayKey(viewDate).slice(0, 8)));
 
   function isCurrentMonth() {
     const now = new Date();
@@ -1113,11 +1152,14 @@ const History = (() => {
 
   const fmtMinutes = m => Math.round(m * 10) / 10;
 
+  // A past month has no "this week", so its first box counts the days practised
+  // that month instead. The streak is about today, so it only shows on the current month.
   function renderStats(prefix, bucket) {
     const t = totals(bucket);
-    const s = streak(bucket);
+    const s = isCurrentMonth() ? streak(bucket) : 0;
     document.getElementById('hist-' + prefix + '-streak').textContent = s ? s + '-day streak' : '';
-    document.getElementById('hist-' + prefix + '-week').textContent = weekCount(bucket);
+    document.getElementById('hist-' + prefix + '-week').textContent = isCurrentMonth() ? weekCount(bucket) : monthDays(bucket).length;
+    document.getElementById('hist-' + prefix + '-week-label').textContent = isCurrentMonth() ? 'This week' : 'Days';
     document.getElementById('hist-' + prefix + '-total').textContent = t.sessions;
     document.getElementById('hist-' + prefix + '-minutes').textContent = fmtMinutes(t.minutes);
   }
@@ -1125,9 +1167,11 @@ const History = (() => {
   function render() {
     load();
     renderNav();
-    renderStats('gym', data.gym);
+    renderStats('taichi', data['tai-chi']);
+    renderStats('posture', data.posture);
     renderStats('breath', data.breathing);
-    renderCalendar(document.getElementById('hist-gym-grid'), data.gym, 'gym');
+    renderCalendar(document.getElementById('hist-taichi-grid'), data['tai-chi'], 'taichi');
+    renderCalendar(document.getElementById('hist-posture-grid'), data.posture, 'posture');
     renderCalendar(document.getElementById('hist-breath-grid'), data.breathing, 'breath');
   }
 
@@ -1321,7 +1365,7 @@ const Gym = (() => {
     running = false;
     releaseWakeLock();
     const totalMin = movements.reduce((s, m) => s + m.seconds, 0) / 60;
-    History.logGym(totalMin);
+    History.logGym(routine.key, totalMin);
     els['gym-done-summary'].textContent = movements.length + ' movements · ' + totalMin + ' minutes';
     els['gym-done'].classList.add('open');
     document.querySelectorAll('#gym-segments .seg').forEach(seg => {
@@ -1415,7 +1459,7 @@ const Breath = (() => {
 
   const els = {};
   function cacheEls() {
-    ['breath-presets', 'breath-desc', 'breath-circle', 'breath-phase', 'breath-count',
+    ['breath-presets', 'breath-circle', 'breath-phase', 'breath-count',
      'breath-phasebar', 'breath-controls', 'breath-stats', 'breath-startpause', 'breath-reset']
       .forEach(id => { els[id] = document.getElementById(id); });
   }
@@ -1469,8 +1513,6 @@ const Breath = (() => {
       btn.addEventListener('click', () => applySeconds(p.seconds.slice()));
       els['breath-presets'].appendChild(btn);
     });
-    const match = PRESETS.find(p => arraysEqual(seconds, p.seconds));
-    els['breath-desc'].textContent = match ? match.desc : 'Custom timing — set your own inhale, hold, exhale and hold.';
   }
 
   function arraysEqual(a, b) { return a.length === b.length && a.every((v, i) => v === b[i]); }
@@ -1657,7 +1699,7 @@ const Breath = (() => {
       })
       .catch(err => {
         els['breath-phase'].textContent = 'Could not load presets';
-        els['breath-desc'].textContent = err.message;
+        console.error(err);
       });
   }
 

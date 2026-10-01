@@ -1,20 +1,110 @@
 {
-  "_readme": "Tai chi routine: 15 movements, 1 minute each, played back to back. Order is the order they run in. 'image' is a looping animated line figure of the movement (see make-illustrations.py) — swap in real footage whenever you're ready, and just replace the file each name points to.",
+  "_readme": "Tai chi routine: 15 movements, 1 minute each, played back to back. Order is the order they run in. 'image' is a looping animated line figure of the movement (see make-illustrations.py) — swap in real footage whenever you're ready, and just replace the file each name points to. 'cue' is a one-sentence how-to shown under the picture, as in posture.json.",
   "movements": [
-    { "id": 1,  "name": "Lymphatic hops",        "seconds": 60, "image": "gym/photos/tai-chi/01-lymphatic-hops.webp" },
-    { "id": 2,  "name": "Body waves",            "seconds": 60, "image": "gym/photos/tai-chi/02-body-waves.webp" },
-    { "id": 3,  "name": "Arm swings",            "seconds": 60, "image": "gym/photos/tai-chi/03-arm-swings.webp" },
-    { "id": 4,  "name": "Trunk twists",          "seconds": 60, "image": "gym/photos/tai-chi/04-trunk-twists.webp" },
-    { "id": 5,  "name": "Forward arm circles",   "seconds": 60, "image": "gym/photos/tai-chi/05-forward-arm-circles.webp" },
-    { "id": 6,  "name": "Squats",                "seconds": 60, "image": "gym/photos/tai-chi/06-squats.webp" },
-    { "id": 7,  "name": "Backward arm swings",   "seconds": 60, "image": "gym/photos/tai-chi/07-backward-arm-swings.webp" },
-    { "id": 8,  "name": "Dead arms",             "seconds": 60, "image": "gym/photos/tai-chi/08-dead-arms.webp" },
-    { "id": 9,  "name": "Golf swings",           "seconds": 60, "image": "gym/photos/tai-chi/09-golf-swings.webp" },
-    { "id": 10, "name": "Marches",               "seconds": 60, "image": "gym/photos/tai-chi/10-marches.webp" },
-    { "id": 11, "name": "Tiptoe arm swings",     "seconds": 60, "image": "gym/photos/tai-chi/11-tiptoe-arm-swings.webp" },
-    { "id": 12, "name": "Twist the waist",       "seconds": 60, "image": "gym/photos/tai-chi/12-twist-the-waist.webp" },
-    { "id": 13, "name": "Wide arm step backs",   "seconds": 60, "image": "gym/photos/tai-chi/13-wide-arm-step-backs.webp" },
-    { "id": 14, "name": "Back step wave lunges", "seconds": 60, "image": "gym/photos/tai-chi/14-back-step-wave-lunges.webp" },
-    { "id": 15, "name": "Ballet squats",         "seconds": 60, "image": "gym/photos/tai-chi/15-ballet-squats.webp" }
+    {
+      "id": 1,
+      "name": "Lymphatic hops",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/01-lymphatic-hops.webp",
+      "cue": "Stay loose and bounce lightly on the balls of your feet. Let your arms and shoulders shake out as you land."
+    },
+    {
+      "id": 2,
+      "name": "Body waves",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/02-body-waves.webp",
+      "cue": "Reach both arms up tall, then roll down through your chest, belly and hips as your knees bend. Rise back up in one smooth wave."
+    },
+    {
+      "id": 3,
+      "name": "Arm swings",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/03-arm-swings.webp",
+      "cue": "Feet hip width apart. Swing one arm forward and up as the other swings back and down. Keep the arms long and relaxed."
+    },
+    {
+      "id": 4,
+      "name": "Trunk twists",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/04-trunk-twists.webp",
+      "cue": "Feet wide, knees soft. Turn from the waist and let both arms swing round to one side, then the other. Your head follows the turn."
+    },
+    {
+      "id": 5,
+      "name": "Forward arm circles",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/05-forward-arm-circles.webp",
+      "cue": "Arms straight and relaxed. Draw big circles around your body: open them out and up the sides, cross them overhead, then sweep them down in front of you."
+    },
+    {
+      "id": 6,
+      "name": "Squats",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/06-squats.webp",
+      "cue": "Feet a little wider than your hips. Sit back and down as if onto a chair, chest up, then press through your heels to stand."
+    },
+    {
+      "id": 7,
+      "name": "Backward arm circles",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/07-backward-arm-circles.webp",
+      "cue": "The same big circles in reverse: cross your arms low in front of your body, sweep them up the middle overhead, then open out and down the sides."
+    },
+    {
+      "id": 8,
+      "name": "Dead arms",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/08-dead-arms.webp",
+      "cue": "Arms completely loose, like ropes. Let them fling open wide and wrap back across your chest on their own."
+    },
+    {
+      "id": 9,
+      "name": "Golf swings",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/09-golf-swings.webp",
+      "cue": "Swing your arms across your body from low on one side to high on the other, like a golf swing. Let your hips and back heel turn with it."
+    },
+    {
+      "id": 10,
+      "name": "Marches",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/10-marches.webp",
+      "cue": "Lift one knee high as your arms open wide, then close your arms around the raised knee. Lower the leg and switch sides."
+    },
+    {
+      "id": 11,
+      "name": "Tiptoe arm swings",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/11-tiptoe-arm-swings.webp",
+      "cue": "Swing your arms low behind you, then up overhead as you rise onto your toes. Lower your heels as the arms come down."
+    },
+    {
+      "id": 12,
+      "name": "Twist the waist",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/12-twist-the-waist.webp",
+      "cue": "Feet planted, turn your waist to one side and let one arm reach out long. Turn back through the centre to the other side."
+    },
+    {
+      "id": 13,
+      "name": "Wide arm step backs",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/13-wide-arm-step-backs.webp",
+      "cue": "Arms out in front of you. Step one foot back into a small lunge as your arms open out wide at shoulder height. Step the foot back in as the arms close, then switch sides."
+    },
+    {
+      "id": 14,
+      "name": "Back step wave lunges",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/14-back-step-wave-lunges.webp",
+      "cue": "Step back into a lunge and sweep both arms up and over to one side in a wave. Return to standing and switch sides."
+    },
+    {
+      "id": 15,
+      "name": "Ballet squats",
+      "seconds": 60,
+      "image": "gym/photos/tai-chi/15-ballet-squats.webp",
+      "cue": "Feet wide, toes turned out. Lower into the squat as your arms float down in front of you, then rise and lift them up overhead."
+    }
   ]
 }
