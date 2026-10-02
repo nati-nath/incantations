@@ -1,5 +1,6 @@
 {
-  "_readme": "Posture routine: 13 steps, 9 minutes, played back to back. Built from two Jeremy Ethier (Built With Science) videos: 'The PERFECT 10 Minute Daily Posture Routine (FIX YOUR SIT!)' (youtube.com/watch?v=RqcOCBb4arc) and 'PERFECT Posture Routine To Unlock Your Sh*t (10 Min/Day)' (youtube.com/watch?v=XWQvmh_INTQ). Timings follow the second video's on-screen table (1 minute, or 30 seconds each side); the first video's rep-based moves are fitted to the same blocks. Mobility first, strengthening after, glute bridge last, as both videos say. He recommends doing it at least twice a day. 'cue' is shown under the timer.",
+  "_readme": "Posture routine: 13 steps, 9 minutes of movement plus a 10 second rest between steps (rest_seconds). Built from two Jeremy Ethier (Built With Science) videos: 'The PERFECT 10 Minute Daily Posture Routine (FIX YOUR SIT!)' (youtube.com/watch?v=RqcOCBb4arc) and 'PERFECT Posture Routine To Unlock Your Sh*t (10 Min/Day)' (youtube.com/watch?v=XWQvmh_INTQ). Timings follow the second video's on-screen table (1 minute, or 30 seconds each side); the first video's rep-based moves are fitted to the same blocks. Mobility first, strengthening after, glute bridge last, as both videos say. He recommends doing it at least twice a day. 'cue' is shown under the timer.",
+  "rest_seconds": 10,
   "movements": [
     {
       "id": 1,

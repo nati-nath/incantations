@@ -296,6 +296,7 @@
     width: 0%;
     background: var(--yellow);
   }
+  .gym-segments .seg.rest { flex-grow: 0.25; }
   .gym-segments .seg.done .fill { width: 100%; }
   .gym-next {
     flex: 0 0 auto;
@@ -1202,7 +1203,8 @@ const Gym = (() => {
   const ROUTINE_KEY = 'app.gym.routine.v1';
   const routineCache = {};  // key -> movements, so switching back and forth doesn't refetch
   let routine = null;
-  let movements = [];
+  let movements = [];       // the run order: movements, with rest steps between them when the routine has rest_seconds
+  let moveTotal = 0;        // how many of those are real movements
   let loaded = false;
   let index = 0;
   let running = false;
@@ -1221,9 +1223,9 @@ const Gym = (() => {
 
   function buildSegments() {
     els['gym-segments'].innerHTML = '';
-    movements.forEach(() => {
+    movements.forEach(m => {
       const seg = document.createElement('div');
-      seg.className = 'seg';
+      seg.className = m.rest ? 'seg rest' : 'seg';
       seg.innerHTML = '<div class="fill"></div>';
       els['gym-segments'].appendChild(seg);
     });
@@ -1232,11 +1234,12 @@ const Gym = (() => {
   // One shared audio context, created and resumed inside the Start tap. iOS only
   // lets a page make sound from a context unlocked by a tap. A fresh context made
   // later from the timer stays suspended, so the old beeps were silent on the phone.
-  // 'playback' (iOS 17+) also stops the ring/silent switch muting the beeps.
+  // 'ambient' (iOS 17+) mixes with other apps, so Spotify keeps playing under the
+  // beeps. 'playback' would pause it. The cost: the ring/silent switch mutes the beeps.
   let audioCtx = null;
   function unlockAudio() {
     try {
-      if (navigator.audioSession) navigator.audioSession.type = 'playback';
+      if (navigator.audioSession) navigator.audioSession.type = 'ambient';
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state !== 'running') audioCtx.resume();
     } catch (e) { /* no audio available, silently skip */ }
@@ -1280,13 +1283,13 @@ const Gym = (() => {
 
   function renderMovement() {
     const m = movements[index];
-    els['gym-progress-label'].textContent = 'Move ' + (index + 1) + ' of ' + movements.length;
+    els['gym-progress-label'].textContent = (m.rest ? 'Rest · ' : '') + 'Move ' + m.moveNo + ' of ' + moveTotal;
     els['gym-photo'].src = m.image;
     els['gym-photo'].alt = m.name;
     els['gym-name'].textContent = m.name;
     els['gym-cue'].textContent = m.cue || '';
-    const next = movements[index + 1];
-    els['gym-next'].textContent = next ? 'Next: ' + next.name : 'Last one';
+    const next = movements.slice(index + 1).find(x => !x.rest);
+    els['gym-next'].textContent = m.rest ? 'Get ready' : next ? 'Next: ' + next.name : 'Last one';
 
     document.querySelectorAll('#gym-segments .seg').forEach((seg, i) => {
       seg.classList.toggle('done', i < index);
@@ -1308,7 +1311,7 @@ const Gym = (() => {
     const fill = document.querySelectorAll('#gym-segments .seg')[index];
     if (fill) fill.querySelector('.fill').style.width = (frac * 100) + '%';
 
-    if (secLeft >= 1 && secLeft <= 3 && secLeft !== warnedSecond) {
+    if (!m.rest && secLeft >= 1 && secLeft <= 3 && secLeft !== warnedSecond) {
       warnedSecond = secLeft;
       warnTick();
     }
@@ -1364,9 +1367,9 @@ const Gym = (() => {
   function finish() {
     running = false;
     releaseWakeLock();
-    const totalMin = movements.reduce((s, m) => s + m.seconds, 0) / 60;
+    const totalMin = Math.round(movements.reduce((s, m) => s + m.seconds, 0) / 6) / 10;
     History.logGym(routine.key, totalMin);
-    els['gym-done-summary'].textContent = movements.length + ' movements · ' + totalMin + ' minutes';
+    els['gym-done-summary'].textContent = moveTotal + ' movements · ' + totalMin + ' minutes';
     els['gym-done'].classList.add('open');
     document.querySelectorAll('#gym-segments .seg').forEach(seg => {
       seg.classList.add('done');
@@ -1385,6 +1388,19 @@ const Gym = (() => {
     });
   }
 
+  // Interleaves a rest step between movements when the routine asks for one.
+  // The rest shows the next movement's picture and cue so you can get into position.
+  function buildSequence(data) {
+    const rest = data.rest_seconds || 0;
+    const seq = [];
+    data.movements.forEach((m, i) => {
+      if (rest && i > 0) seq.push({ rest: true, name: 'Rest', seconds: rest, image: m.image, cue: 'Next: ' + m.name + '. ' + (m.cue || ''), moveNo: i + 1 });
+      seq.push(Object.assign({ moveNo: i + 1 }, m));
+    });
+    seq.moveTotal = data.movements.length;
+    return seq;
+  }
+
   // Switching routine stops whatever was running and starts the new one from the top.
   function selectRoutine(r) {
     if (running) pause();
@@ -1395,13 +1411,14 @@ const Gym = (() => {
     const show = list => {
       if (routine !== r) return;  // another tap landed while this one was loading
       movements = list;
+      moveTotal = list.moveTotal;
       buildSegments();
       goTo(0, false);
     };
     if (routineCache[r.key]) { show(routineCache[r.key]); return; }
     fetch(r.file)
       .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
-      .then(data => { routineCache[r.key] = data.movements; show(data.movements); })
+      .then(data => { routineCache[r.key] = buildSequence(data); show(routineCache[r.key]); })
       .catch(err => {
         els['gym-name'].textContent = 'Could not load the movements.';
         els['gym-next'].textContent = err.message;
@@ -1409,7 +1426,11 @@ const Gym = (() => {
   }
 
   function wireControls() {
-    els['gym-startpause'].addEventListener('click', () => { running ? pause() : start(); });
+    els['gym-startpause'].addEventListener('click', () => {
+      if (running) { pause(); return; }
+      start();
+      tone(660, 0.3, 0.12);  // short tone on each tap of Start/Resume, so you hear straight away that sound works
+    });
     els['gym-skip'].addEventListener('click', () => {
       if (index >= movements.length - 1) { finish(); return; }
       goTo(index + 1, running);
@@ -1418,7 +1439,7 @@ const Gym = (() => {
     els['gym-restart'].addEventListener('click', () => goTo(0, false));
     els['gym-done-restart'].addEventListener('click', () => goTo(0, true));
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && running) acquireWakeLock();
+      if (document.visibilityState === 'visible' && running) { acquireWakeLock(); unlockAudio(); }
     });
   }
 
